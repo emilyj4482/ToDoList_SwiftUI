@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    
-    // test push comment
+
     var count: Int = 0
     
     var body: some View {
