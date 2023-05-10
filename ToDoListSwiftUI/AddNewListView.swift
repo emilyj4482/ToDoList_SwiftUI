@@ -9,6 +9,8 @@ import SwiftUI
 
 struct AddNewListView: View {
     
+    @Environment(\.dismiss) private var dismiss
+    
     @State var listName: String = ""
     
     var body: some View {
@@ -16,18 +18,25 @@ struct AddNewListView: View {
             HStack {
                 Button {
                     print("Cencel btn tapped")
+                    dismiss()
                 } label: {
                     Text("Cancel")
                 }
                 Spacer()
+                NavigationLink("Done") {
+                    TodoListView()
+                }
             }
-            .padding()
+            .padding(20)
             TextField("Untitled List", text: $listName)
                 .font(.system(.largeTitle, weight: .black))
-                .padding(.leading, 15)
+                .padding(.leading, 20)
             Spacer()
         }
         .navigationBarBackButtonHidden()
+        .onDisappear {
+            print("onDisappear")
+        }
     }
 }
 

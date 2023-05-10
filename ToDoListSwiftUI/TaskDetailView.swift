@@ -44,6 +44,8 @@ struct TaskDetailView: View {
             .padding(.bottom, 5)
 
         }
+        .navigationBarTitleDisplayMode(.inline)
+        .padding(.top, 20)
     }
 }
 
