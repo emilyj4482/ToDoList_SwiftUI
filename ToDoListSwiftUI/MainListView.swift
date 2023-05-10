@@ -18,7 +18,7 @@ struct MainListView: View {
             VStack {
                 List {
                     NavigationLink {
-                        Text("Important")
+                        TodoListView()
                     } label: {
                         HStack {
                             Image(systemName: "star.fill")
@@ -39,7 +39,7 @@ struct MainListView: View {
                     .padding(.leading, 30)
                     .padding(.bottom, 5)
                 NavigationLink {
-                    Text("Add a List")
+                    AddNewListView()
                 } label: {
                     HStack {
                         Image(systemName: "plus")
