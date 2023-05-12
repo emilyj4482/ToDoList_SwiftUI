@@ -14,11 +14,11 @@ struct MainListView: View {
     var todoCount: Int = 1
     
     var groups: [Group] = [
-        Group(id: 1, name: "Important", tasks: [Task(id: 1, groupId: 1, title: "to stduy iOS", isDone: false, isImportant: true)]),
-        Group(id: 2, name: "to study", tasks: [Task(id: 1, groupId: 2, title: "iOS", isDone: false, isImportant: false)]),
+        .init(id: 1, name: "Important", tasks: [Task(id: 1, groupId: 1, title: "to stduy iOS", isDone: false, isImportant: true)]),
+        .init(id: 2, name: "to study", tasks: [Task(id: 1, groupId: 2, title: "iOS", isDone: false, isImportant: false)]),
     ]
     
-    @State private var path = NavigationPath()
+    @State private var path: [Group] = []
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -73,8 +73,7 @@ struct MainListView: View {
             }
             .navigationTitle("ToDoList")
             .navigationDestination(for: Group.self) { group in
-                // TodoListView()
-                TodoListView(group: group)
+                Text(group.name)
             }
         }
     }

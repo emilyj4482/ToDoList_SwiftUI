@@ -11,7 +11,7 @@ import SwiftUI
 struct ToDoListSwiftUIApp: App {
     var body: some Scene {
         WindowGroup {
-            MainListView()
+            MainView()
                 .tint(.pink)
         }
     }

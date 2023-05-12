@@ -10,6 +10,7 @@ import SwiftUI
 struct TodoListView: View {
     
     var group: Group
+    var groupName: String
     
     var body: some View {
         NavigationStack {
@@ -28,7 +29,7 @@ struct TodoListView: View {
                 .padding(.leading, -10)
                 .padding(.top, 6)
                 
-                Text(group.name)
+                Text(groupName)
                     .font(.system(.largeTitle, weight: .black))
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
