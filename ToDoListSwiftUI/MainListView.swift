@@ -74,7 +74,7 @@ struct MainListView: View {
             .navigationTitle("ToDoList")
             .navigationDestination(for: Group.self) { group in
                 // TodoListView()
-                Text(group.name)
+                TodoListView(group: group)
             }
         }
     }

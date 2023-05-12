@@ -24,7 +24,7 @@ struct AddNewListView: View {
                 }
                 Spacer()
                 NavigationLink("Done") {
-                    TodoListView()
+                    // TodoListView()
                 }
             }
             .padding(20)

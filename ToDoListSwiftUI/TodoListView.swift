@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct TodoListView: View {
+    
+    var group: Group
+    
     var body: some View {
         NavigationStack {
             VStack {
@@ -25,7 +28,7 @@ struct TodoListView: View {
                 .padding(.leading, -10)
                 .padding(.top, 6)
                 
-                Text("Important")
+                Text(group.name)
                     .font(.system(.largeTitle, weight: .black))
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
@@ -70,8 +73,10 @@ struct TodoListView: View {
     }
 }
 
+/*
 struct TodoListView_Previews: PreviewProvider {
     static var previews: some View {
-        TodoListView()
+        TodoListView(group: group)
     }
 }
+*/
