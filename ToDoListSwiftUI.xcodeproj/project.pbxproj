@@ -14,6 +14,7 @@
 		A160005C2A0BAD1B00E060E5 /* TodoListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A160005B2A0BAD1B00E060E5 /* TodoListView.swift */; };
 		A160005E2A0BBAAD00E060E5 /* TaskDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A160005D2A0BBAAD00E060E5 /* TaskDetailView.swift */; };
 		A16000602A0BBABF00E060E5 /* AddNewListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A160005F2A0BBABF00E060E5 /* AddNewListView.swift */; };
+		A1FAB3C42A0E539000F2FE25 /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1FAB3C32A0E539000F2FE25 /* Task.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +26,7 @@
 		A160005B2A0BAD1B00E060E5 /* TodoListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoListView.swift; sourceTree = "<group>"; };
 		A160005D2A0BBAAD00E060E5 /* TaskDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetailView.swift; sourceTree = "<group>"; };
 		A160005F2A0BBABF00E060E5 /* AddNewListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddNewListView.swift; sourceTree = "<group>"; };
+		A1FAB3C32A0E539000F2FE25 /* Task.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +66,7 @@
 				A160005D2A0BBAAD00E060E5 /* TaskDetailView.swift */,
 				A15CB52829FFEB6E005A0C5E /* Assets.xcassets */,
 				A15CB52A29FFEB6E005A0C5E /* Preview Content */,
+				A1FAB3C32A0E539000F2FE25 /* Task.swift */,
 			);
 			path = ToDoListSwiftUI;
 			sourceTree = "<group>";
@@ -150,6 +153,7 @@
 				A15CB52729FFEB6D005A0C5E /* MainListView.swift in Sources */,
 				A16000602A0BBABF00E060E5 /* AddNewListView.swift in Sources */,
 				A15CB52529FFEB6D005A0C5E /* ToDoListSwiftUIApp.swift in Sources */,
+				A1FAB3C42A0E539000F2FE25 /* Task.swift in Sources */,
 				A160005C2A0BAD1B00E060E5 /* TodoListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

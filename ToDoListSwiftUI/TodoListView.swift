@@ -11,6 +11,24 @@ struct TodoListView: View {
     var body: some View {
         NavigationStack {
             VStack {
+                Button {
+                    print("Back btn tapped")
+                } label: {
+                    HStack {
+                        Image(systemName: "chevron.left")
+                            .resizable()
+                            .frame(width: 11, height: 19)
+                        Text("Lists")
+                    }
+                }
+                .frame(maxWidth: .infinity ,alignment: .leading)
+                .padding(.leading, -10)
+                .padding(.top, 6)
+                
+                Text("Important")
+                    .font(.system(.largeTitle, weight: .black))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                
                 HStack {
                     Button {
                         print("check btn tapped")
@@ -31,8 +49,10 @@ struct TodoListView: View {
                             .tint(.yellow)
                     }
                 }
-                .padding(15)
+                .padding([.top, .bottom], 1)
+                
                 Spacer()
+                
                 Button {
                     print("Add a Task")
                 } label: {
@@ -42,11 +62,10 @@ struct TodoListView: View {
                     }
                 }
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, 30)
-                .padding(.bottom, 5)
-
+                .padding([.leading, .bottom], 5)
             }
-            .navigationTitle(Text("Important"))
+            .navigationBarBackButtonHidden()
+            .padding([.leading, .trailing], 20)
         }
     }
 }

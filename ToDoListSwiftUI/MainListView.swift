@@ -13,10 +13,18 @@ struct MainListView: View {
     var listCount: Int = 0
     var todoCount: Int = 1
     
+    var groups: [Group] = [
+        Group(id: 1, name: "Important", tasks: [Task(id: 1, groupId: 1, title: "to stduy iOS", isDone: false, isImportant: true)]),
+        Group(id: 2, name: "to study", tasks: [Task(id: 1, groupId: 2, title: "iOS", isDone: false, isImportant: false)]),
+    ]
+    
+    @State private var path = NavigationPath()
+    
     var body: some View {
-        NavigationStack {
+        NavigationStack(path: $path) {
             VStack {
                 List {
+                    /*
                     NavigationLink {
                         TodoListView()
                     } label: {
@@ -27,6 +35,19 @@ struct MainListView: View {
                             Text("\(todoCount)")
                                 .font(.system(size: 10))
                                 .foregroundColor(.gray)
+                        }
+                    }
+                     */
+                    ForEach(groups, id: \.self) { group in
+                        NavigationLink(value: group) {
+                            HStack {
+                                Image(systemName: "star.fill")
+                                Text(group.name)
+                                Spacer()
+                                Text("\(group.tasks.count)")
+                                    .font(.system(size: 10))
+                                    .foregroundColor(.gray)
+                            }
                         }
                     }
                 }
@@ -49,9 +70,12 @@ struct MainListView: View {
                     .padding(.leading, 30)
                     .padding(.bottom, 5)
                 }
-                
             }
             .navigationTitle("ToDoList")
+            .navigationDestination(for: Group.self) { group in
+                // TodoListView()
+                Text(group.name)
+            }
         }
     }
 }
