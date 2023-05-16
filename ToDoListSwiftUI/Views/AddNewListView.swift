@@ -15,27 +15,29 @@ struct AddNewListView: View {
     
     var body: some View {
         VStack {
-            HStack {
+            TextField("Untitled List", text: $listName)
+                .font(.system(.largeTitle, weight: .bold))
+                .padding(.leading, 20)
+            Spacer()
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarBackButtonHidden()
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
                 Button {
-                    print("Cencel btn tapped")
                     dismiss()
                 } label: {
                     Text("Cancel")
                 }
-                Spacer()
+            }
+            ToolbarItem(placement: .navigationBarTrailing) {
                 NavigationLink("Done") {
                     // 임시 값
                     let group = Group(id: 32, name: listName, tasks: [Task(id: 1, groupId: 1, title: "to stduy iOS", isDone: false, isImportant: true)])
                     TodoListView(group: group)
                 }
             }
-            .padding(20)
-            TextField("Untitled List", text: $listName)
-                .font(.system(.largeTitle, weight: .black))
-                .padding(.leading, 20)
-            Spacer()
         }
-        .navigationBarBackButtonHidden()
     }
 }
 

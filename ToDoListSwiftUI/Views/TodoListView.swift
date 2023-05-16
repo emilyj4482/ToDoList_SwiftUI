@@ -49,6 +49,7 @@ struct TodoListView: View {
             .padding([.top, .leading, .bottom], 5)
         }
         .navigationTitle(group.name)
+        .navigationBarTitleDisplayMode(.large)
         .padding([.leading, .trailing], 20)
     }
 }

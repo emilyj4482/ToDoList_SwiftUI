@@ -59,10 +59,6 @@ struct MainView: View {
             .navigationTitle("ToDoList")
             .navigationDestination(for: Group.self) { group in
                 TodoListView(group: group)
-                    .onAppear {
-                        // path = []
-                        print("hello")
-                    }
             }
         }
     }
