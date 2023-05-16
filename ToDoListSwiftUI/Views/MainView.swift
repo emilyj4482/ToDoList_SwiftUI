@@ -1,14 +1,13 @@
 //
-//  MainListView.swift
+//  MainView.swift
 //  ToDoListSwiftUI
 //
-//  Created by EMILY on 2023/05/01.
+//  Created by EMILY on 2023/05/13.
 //
 
 import SwiftUI
 
-struct MainListView: View {
-
+struct MainView: View {
     // 임시 값
     var listCount: Int = 0
     var todoCount: Int = 1
@@ -18,27 +17,13 @@ struct MainListView: View {
         .init(id: 2, name: "to study", tasks: [Task(id: 1, groupId: 2, title: "iOS", isDone: false, isImportant: false)]),
     ]
     
-    @State private var path: [Group] = []
+    @State var path: [Group] = []
     
     var body: some View {
         NavigationStack(path: $path) {
             VStack {
                 List {
-                    /*
-                    NavigationLink {
-                        TodoListView()
-                    } label: {
-                        HStack {
-                            Image(systemName: "star.fill")
-                            Text("Important")
-                            Spacer()
-                            Text("\(todoCount)")
-                                .font(.system(size: 10))
-                                .foregroundColor(.gray)
-                        }
-                    }
-                     */
-                    ForEach(groups, id: \.self) { group in
+                    ForEach(groups) { group in
                         NavigationLink(value: group) {
                             HStack {
                                 Image(systemName: "star.fill")
@@ -73,14 +58,19 @@ struct MainListView: View {
             }
             .navigationTitle("ToDoList")
             .navigationDestination(for: Group.self) { group in
-                Text(group.name)
+                TodoListView(group: group)
+                    .onAppear {
+                        // path = []
+                        print("hello")
+                    }
             }
         }
     }
 }
 
-struct MainListView_Previews: PreviewProvider {
+struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainListView()
+        MainView()
     }
 }
+

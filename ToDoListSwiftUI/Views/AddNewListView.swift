@@ -24,7 +24,9 @@ struct AddNewListView: View {
                 }
                 Spacer()
                 NavigationLink("Done") {
-                    // TodoListView()
+                    // 임시 값
+                    let group = Group(id: 32, name: listName, tasks: [Task(id: 1, groupId: 1, title: "to stduy iOS", isDone: false, isImportant: true)])
+                    TodoListView(group: group)
                 }
             }
             .padding(20)
@@ -34,9 +36,6 @@ struct AddNewListView: View {
             Spacer()
         }
         .navigationBarBackButtonHidden()
-        .onDisappear {
-            print("onDisappear")
-        }
     }
 }
 

@@ -10,7 +10,7 @@ import Foundation
 /* Model */
 
 // 할 일 Object
-struct Task: Codable, Hashable {
+struct Task: Identifiable, Codable, Hashable {
     let id: Int
     let groupId: Int
     var title: String
@@ -25,7 +25,7 @@ struct Task: Codable, Hashable {
 }
 
 // 할 일 그룹 Object
-struct Group: Codable, Hashable {
+struct Group: Identifiable, Codable, Hashable {
     let id: Int
     var name: String
     var tasks: [Task]

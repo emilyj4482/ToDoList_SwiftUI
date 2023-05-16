@@ -2,82 +2,53 @@
 //  TodoListView.swift
 //  ToDoListSwiftUI
 //
-//  Created by EMILY on 2023/05/10.
+//  Created by EMILY on 2023/05/16.
 //
 
 import SwiftUI
 
 struct TodoListView: View {
-    
+
     var group: Group
-    var groupName: String
     
     var body: some View {
-        NavigationStack {
-            VStack {
+        VStack {
+            HStack {
                 Button {
-                    print("Back btn tapped")
+                    print("check btn tapped")
                 } label: {
-                    HStack {
-                        Image(systemName: "chevron.left")
-                            .resizable()
-                            .frame(width: 11, height: 19)
-                        Text("Lists")
-                    }
+                    Image(systemName: "circle")
                 }
-                .frame(maxWidth: .infinity ,alignment: .leading)
-                .padding(.leading, -10)
-                .padding(.top, 6)
-                
-                Text(groupName)
-                    .font(.system(.largeTitle, weight: .black))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                HStack {
-                    Button {
-                        print("check btn tapped")
-                    } label: {
-                        Image(systemName: "circle")
-                    }
-                    NavigationLink {
-                        TaskDetailView()
-                    } label: {
-                        Text("to study iOS")
-                            .tint(.black)
-                    }
-                    Spacer()
-                    Button {
-                        print("important btn tapped")
-                    } label: {
-                        Image(systemName: "star")
-                            .tint(.yellow)
-                    }
+                NavigationLink {
+                    TaskDetailView()
+                } label: {
+                    Text("to study iOS")
+                        .tint(.black)
                 }
-                .padding([.top, .bottom], 1)
-                
                 Spacer()
-                
                 Button {
-                    print("Add a Task")
+                    print("important btn tapped")
                 } label: {
-                    HStack {
-                        Image(systemName: "plus")
-                        Text("Add a Task")
-                    }
+                    Image(systemName: "star")
+                        .tint(.yellow)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding([.leading, .bottom], 5)
             }
-            .navigationBarBackButtonHidden()
-            .padding([.leading, .trailing], 20)
+            .padding([.top, .bottom], 1)
+            
+            Spacer()
+            
+            Button {
+                print("Add a Task")
+            } label: {
+                HStack {
+                    Image(systemName: "plus")
+                    Text("Add a Task")
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding([.top, .leading, .bottom], 5)
         }
+        .navigationTitle(group.name)
+        .padding([.leading, .trailing], 20)
     }
 }
-
-/*
-struct TodoListView_Previews: PreviewProvider {
-    static var previews: some View {
-        TodoListView(group: group)
-    }
-}
-*/
