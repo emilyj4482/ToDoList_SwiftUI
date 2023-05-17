@@ -8,9 +8,6 @@
 import SwiftUI
 
 struct MainView: View {
-    // 임시 값
-    var listCount: Int = 0
-    var todoCount: Int = 1
     
     var groups: [Group] = [
         .init(id: 1, name: "Important", tasks: [Task(id: 1, groupId: 1, title: "to stduy iOS", isDone: false, isImportant: true)]),
@@ -22,6 +19,7 @@ struct MainView: View {
     var body: some View {
         NavigationStack(path: $path) {
             VStack {
+                
                 List {
                     ForEach(groups) { group in
                         NavigationLink(value: group) {
@@ -38,12 +36,16 @@ struct MainView: View {
                 }
                 .scrollContentBackground(.hidden)
                 .listStyle(PlainListStyle())
-                Text("You have \(listCount) custom list.")
+                
+                Text(
+                    groups.count < 2 ? "You have \(groups.count) custom list." : "You have \(groups.count) custom lists."
+                )
                     .font(.system(size: 13))
                     .foregroundColor(.pink)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .padding(.leading, 30)
                     .padding(.bottom, 5)
+                
                 NavigationLink {
                     AddNewListView()
                 } label: {
@@ -55,6 +57,7 @@ struct MainView: View {
                     .padding(.leading, 30)
                     .padding(.bottom, 5)
                 }
+                
             }
             .navigationTitle("ToDoList")
             .navigationDestination(for: Group.self) { group in

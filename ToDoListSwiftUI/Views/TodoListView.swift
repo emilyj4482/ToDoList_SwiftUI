@@ -19,12 +19,8 @@ struct TodoListView: View {
                 } label: {
                     Image(systemName: "circle")
                 }
-                NavigationLink {
-                    TaskDetailView()
-                } label: {
-                    Text("to study iOS")
-                        .tint(.black)
-                }
+                Text("to study iOS")
+                    .tint(.black)
                 Spacer()
                 Button {
                     print("important btn tapped")
@@ -33,7 +29,7 @@ struct TodoListView: View {
                         .tint(.yellow)
                 }
             }
-            .padding([.top, .bottom], 1)
+            .padding([.top, .bottom], 10)
             
             Spacer()
             
@@ -46,11 +42,12 @@ struct TodoListView: View {
                 }
             }
             .frame(maxWidth: .infinity, alignment: .leading)
-            .padding([.top, .leading, .bottom], 5)
+            .padding(.leading, 15)
+            .padding(.bottom, 5)
         }
         .navigationTitle(group.name)
         .navigationBarTitleDisplayMode(.large)
-        .padding([.leading, .trailing], 20)
+        .padding([.leading, .trailing], 15)
     }
 }
 
