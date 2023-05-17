@@ -58,10 +58,10 @@
 			isa = PBXGroup;
 			children = (
 				A15CB52429FFEB6D005A0C5E /* ToDoListSwiftUIApp.swift */,
+				A1FAB3C32A0E539000F2FE25 /* Task.swift */,
 				A1FAB3C52A0E96DC00F2FE25 /* Views */,
 				A15CB52829FFEB6E005A0C5E /* Assets.xcassets */,
 				A15CB52A29FFEB6E005A0C5E /* Preview Content */,
-				A1FAB3C32A0E539000F2FE25 /* Task.swift */,
 			);
 			path = ToDoListSwiftUI;
 			sourceTree = "<group>";
