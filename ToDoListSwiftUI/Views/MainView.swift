@@ -26,7 +26,7 @@ struct MainView: View {
                     ForEach(groups) { group in
                         NavigationLink(value: group) {
                             HStack {
-                                Image(systemName: "star.fill")
+                                Image(systemName: group.id == 1 ? "star.fill" : "checklist.checked")
                                 Text(group.name)
                                 Spacer()
                                 Text("\(group.tasks.count)")

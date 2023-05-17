@@ -31,10 +31,10 @@ struct AddNewListView: View {
                 }
             }
             ToolbarItem(placement: .navigationBarTrailing) {
-                NavigationLink("Done") {
-                    // 임시 값
-                    let group = Group(id: 32, name: listName, tasks: [Task(id: 1, groupId: 1, title: "to stduy iOS", isDone: false, isImportant: true)])
-                    TodoListView(group: group)
+                Button {
+                    dismiss()
+                } label: {
+                    Text("Done")
                 }
             }
         }
@@ -43,6 +43,8 @@ struct AddNewListView: View {
 
 struct AddNewListView_Previews: PreviewProvider {
     static var previews: some View {
-        AddNewListView()
+        NavigationView {
+            AddNewListView()
+        }
     }
 }

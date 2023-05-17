@@ -53,3 +53,12 @@ struct TodoListView: View {
         .padding([.leading, .trailing], 20)
     }
 }
+
+struct TodoListView_Previews: PreviewProvider {
+    static var previews: some View {
+        let group: Group = Group(id: 2, name: "to study", tasks: [Task(id: 1, groupId: 2, title: "iOS", isDone: false, isImportant: false)])
+        NavigationView {
+            TodoListView(group: group)
+        }
+    }
+}

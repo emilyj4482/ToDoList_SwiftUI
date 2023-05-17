@@ -51,6 +51,8 @@ struct TaskDetailView: View {
 
 struct TaskDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        TaskDetailView()
+        NavigationView {
+            TaskDetailView()
+        }
     }
 }
