@@ -10,8 +10,10 @@ import SwiftUI
 struct AddNewListView: View {
     
     @Environment(\.dismiss) private var dismiss
+    @EnvironmentObject var taskVM: TaskViewModel
     
     @State var listName: String = ""
+    @State var showAlert: Bool = false
     
     var body: some View {
         VStack {
@@ -32,12 +34,23 @@ struct AddNewListView: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
+                    taskVM.addGroup(taskVM.createGroup(getListName(listName)))
+                    showAlert = true
                     dismiss()
                 } label: {
                     Text("Done")
                 }
+                .alert("A new list has been added successfully.", isPresented: $showAlert) {}
             }
         }
+    }
+    
+    // textfield 입력값 공백 시 "Untitled list" 부여
+    func getListName(_ listName: String) -> String {
+        if listName.trim().isEmpty {
+            return "Untitled list"
+        }
+        return listName.trim()
     }
 }
 

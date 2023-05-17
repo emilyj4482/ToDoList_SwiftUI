@@ -9,10 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     
-    var groups: [Group] = [
-        .init(id: 1, name: "Important", tasks: [Task(id: 1, groupId: 1, title: "to stduy iOS", isDone: false, isImportant: true)]),
-        .init(id: 2, name: "to study", tasks: [Task(id: 1, groupId: 2, title: "iOS", isDone: false, isImportant: false)]),
-    ]
+    @StateObject var taskVM: TaskViewModel = TaskViewModel()
     
     @State var path: [Group] = []
     
@@ -21,7 +18,7 @@ struct MainView: View {
             VStack {
                 
                 List {
-                    ForEach(groups) { group in
+                    ForEach(taskVM.groups) { group in
                         NavigationLink(value: group) {
                             HStack {
                                 Image(systemName: group.id == 1 ? "star.fill" : "checklist.checked")
@@ -38,7 +35,7 @@ struct MainView: View {
                 .listStyle(PlainListStyle())
                 
                 Text(
-                    groups.count < 2 ? "You have \(groups.count) custom list." : "You have \(groups.count) custom lists."
+                    taskVM.groups.count < 2 ? "You have \(taskVM.groups.count) custom list." : "You have \(taskVM.groups.count) custom lists."
                 )
                     .font(.system(size: 13))
                     .foregroundColor(.pink)
@@ -64,6 +61,7 @@ struct MainView: View {
                 TodoListView(group: group)
             }
         }
+        .environmentObject(taskVM)
     }
 }
 
