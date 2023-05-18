@@ -11,6 +11,10 @@ struct TodoListView: View {
 
     var group: Group
     
+    @State var newTaskTitle: String = ""
+    @State var taskFieldHidden: Bool = true
+    @FocusState var taskFieldInFocus: Bool
+    
     var body: some View {
         VStack {
             ForEach(group.tasks) { task in
@@ -19,17 +23,12 @@ struct TodoListView: View {
             
             Spacer()
             
-            Button {
-                
-            } label: {
-                HStack {
-                    Image(systemName: "plus")
-                    Text("Add a Task")
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .padding(.leading, 15)
-            .padding(.bottom, 5)
+            taskFieldHidden ? nil :
+            TaskField(newTaskTitle: $newTaskTitle)
+            
+            taskFieldHidden ?
+            AddTaskButton(taskFieldHidden: $taskFieldHidden)
+            : nil
         }
         .navigationTitle(group.name)
         .navigationBarTitleDisplayMode(.large)
@@ -37,33 +36,41 @@ struct TodoListView: View {
     }
 }
 
-struct TaskHStack: View {
+struct AddTaskButton: View {
     
-    var task: Task
+    @Binding var taskFieldHidden: Bool
+    @FocusState var taskFieldInFocus: Bool
     
-    @State var isDone: Bool = false
+    var body: some View {
+        Button {
+            taskFieldHidden.toggle()
+            taskFieldInFocus = true
+        } label: {
+            HStack {
+                Image(systemName: "plus")
+                Text("Add a Task")
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(.leading, 15)
+        .padding(.bottom, 5)
+    }
+}
+
+struct TaskField: View {
+    
+    @Binding var newTaskTitle: String
+    @FocusState var taskFieldInFocus: Bool
     
     var body: some View {
         HStack {
-            Button {
-                isDone.toggle()
-            } label: {
-                Image(systemName: isDone ? "checkmark.circle" : "circle")
-                    .tint(isDone ? .green : .red)
-                // Image(systemName: task.isDone ? "checkmark.circle" : "circle")
-                    // .tint(task.isDone ? .green : .red)
-            }
-            
-            Text(task.title)
-            
+            Image(systemName: "circle")
+                .foregroundColor(.red)
+            TextField("Add a Task", text: $newTaskTitle)
+                .focused($taskFieldInFocus)
             Spacer()
-            
-            Button {
-
-            } label: {
-                Image(systemName: task.isImportant ? "star.fill": "star")
-                    .tint(.yellow)
-            }
+            Image(systemName: "star")
+                .foregroundColor(.yellow)
         }
         .padding([.top, .bottom], 10)
     }
