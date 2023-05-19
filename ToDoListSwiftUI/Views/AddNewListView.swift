@@ -15,9 +15,12 @@ struct AddNewListView: View {
     @State var listName: String = ""
     @State var showAlert: Bool = false
     
+    @FocusState var focused: Bool
+    
     var body: some View {
         VStack {
             TextField("Untitled List", text: $listName)
+                .focused($focused)
                 .font(.system(.largeTitle, weight: .bold))
                 .padding(.leading, 20)
             Spacer()
@@ -42,6 +45,10 @@ struct AddNewListView: View {
                 }
                 .alert("A new list has been added successfully.", isPresented: $showAlert) {}
             }
+        }
+        // 화면이 뜨자마자 텍스트필드 입력 모드
+        .onAppear{
+            self.focused = true
         }
     }
     

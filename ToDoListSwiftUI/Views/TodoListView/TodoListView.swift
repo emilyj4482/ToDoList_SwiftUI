@@ -12,67 +12,69 @@ struct TodoListView: View {
     var group: Group
     
     @State var newTaskTitle: String = ""
-    @State var taskFieldHidden: Bool = true
+    // add New Task Mode : Add a Task 버튼을 눌러 새로운 task를 입력하는 모드 (Add a Task 버튼은 숨김, textfield 및 Done 버튼은 노출한다. false 시 반대)
+    @State var addNewTaskMode: Bool = false
     @FocusState var taskFieldInFocus: Bool
     
     var body: some View {
         VStack {
-            ForEach(group.tasks) { task in
-                TaskHStack(task: task)
+            VStack {
+                ForEach(group.tasks) { task in
+                    TaskHStack(task: task)
+                }
+                Spacer()
+                Text("End")
+            }
+            .background(.gray)
+            // 화면을 tap 하면
+            .onTapGesture {
+                print("tapped")
+                addNewTaskMode = false
             }
             
-            Spacer()
-            
-            taskFieldHidden ? nil :
-            TaskField(newTaskTitle: $newTaskTitle)
-            
-            taskFieldHidden ?
-            AddTaskButton(taskFieldHidden: $taskFieldHidden)
-            : nil
+            // Add a Task btn tap : 1) Add a Task Button hidden 2) TaskField show 3) Done Button show
+            // on Tap Gestrue : 1) TaskField hidden 2) Add a Task Button show 3) Done Button hidden
+            if addNewTaskMode {
+                HStack {
+                    Image(systemName: "circle")
+                        .foregroundColor(.red)
+                    TextField("Add a Task", text: $newTaskTitle)
+                        .focused($taskFieldInFocus)
+                    Spacer()
+                    Image(systemName: "star")
+                        .foregroundColor(.yellow)
+                }
+                .padding([.top, .bottom], 10)
+            } else {
+                Button {
+                    addNewTaskMode = true
+                    self.taskFieldInFocus = true
+                } label: {
+                    HStack {
+                        Image(systemName: "plus")
+                        Text("Add a Task")
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, 15)
+                .padding(.bottom, 5)
+            }
         }
         .navigationTitle(group.name)
         .navigationBarTitleDisplayMode(.large)
         .padding([.leading, .trailing], 15)
-    }
-}
-
-struct AddTaskButton: View {
-    
-    @Binding var taskFieldHidden: Bool
-    @FocusState var taskFieldInFocus: Bool
-    
-    var body: some View {
-        Button {
-            taskFieldHidden.toggle()
-            taskFieldInFocus = true
-        } label: {
-            HStack {
-                Image(systemName: "plus")
-                Text("Add a Task")
+        .toolbar {
+            //
+            addNewTaskMode ?
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button {
+                    addNewTaskMode = false
+                } label: {
+                    Text("Done")
+                }
             }
+            : nil
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(.leading, 15)
-        .padding(.bottom, 5)
-    }
-}
-
-struct TaskField: View {
-    
-    @Binding var newTaskTitle: String
-    @FocusState var taskFieldInFocus: Bool
-    
-    var body: some View {
-        HStack {
-            Image(systemName: "circle")
-                .foregroundColor(.red)
-            TextField("Add a Task", text: $newTaskTitle)
-                .focused($taskFieldInFocus)
-            Spacer()
-            Image(systemName: "star")
-                .foregroundColor(.yellow)
-        }
-        .padding([.top, .bottom], 10)
     }
 }
 
