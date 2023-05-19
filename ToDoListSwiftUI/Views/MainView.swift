@@ -10,7 +10,6 @@ import SwiftUI
 struct MainView: View {
     
     @StateObject var taskVM: TaskViewModel = TaskViewModel()
-    
     @State var path: [Group] = []
     
     var body: some View {

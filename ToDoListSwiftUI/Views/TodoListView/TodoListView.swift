@@ -9,6 +9,7 @@ import SwiftUI
 
 struct TodoListView: View {
 
+    @EnvironmentObject var taskVM: TaskViewModel
     var group: Group
     
     @State var newTaskTitle: String = ""
@@ -26,10 +27,10 @@ struct TodoListView: View {
                 Text("End")
             }
             .background(.gray)
-            // 화면을 tap 하면
+            // 화면을 tap 하면 textfield 영역 숨기고 입력값이 있다면 비운다.
             .onTapGesture {
-                print("tapped")
                 addNewTaskMode = false
+                newTaskTitle = ""
             }
             
             // Add a Task btn tap : 1) Add a Task Button hidden 2) TaskField show 3) Done Button show
@@ -68,7 +69,16 @@ struct TodoListView: View {
             addNewTaskMode ?
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    addNewTaskMode = false
+                    // textfield 입력값이 공백인 경우 입력모드를 종료하지 않고 alert 표시
+                    if newTaskTitle.trim().isEmpty {
+                    } else {
+                        addNewTaskMode = false
+                        // Task 추가
+                        taskVM.addTask(groupId: group.id, taskVM.createTask(groupId: group.id, newTaskTitle))
+                        print(taskVM.groups)
+                        // textfield 비움
+                        newTaskTitle = ""
+                    }
                 } label: {
                     Text("Done")
                 }
