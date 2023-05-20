@@ -57,7 +57,7 @@ struct MainView: View {
             }
             .navigationTitle("ToDoList")
             .navigationDestination(for: Group.self) { group in
-                TodoListView(group: group)
+                TodoListView(group: group, groupIndex: taskVM.groups.firstIndex(where: { $0.id == group.id }) ?? 0)
             }
         }
         .environmentObject(taskVM)

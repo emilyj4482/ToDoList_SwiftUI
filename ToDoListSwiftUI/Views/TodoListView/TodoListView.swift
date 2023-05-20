@@ -11,6 +11,7 @@ struct TodoListView: View {
 
     @EnvironmentObject var taskVM: TaskViewModel
     var group: Group
+    var groupIndex: Int
     
     @State var newTaskTitle: String = ""
     // add New Task Mode : Add a Task 버튼을 눌러 새로운 task를 입력하는 모드 (Add a Task 버튼은 숨김, textfield 및 Done 버튼은 노출한다. false 시 반대)
@@ -20,11 +21,10 @@ struct TodoListView: View {
     var body: some View {
         VStack {
             VStack {
-                ForEach(group.tasks) { task in
+                ForEach(taskVM.groups[groupIndex].tasks) { task in
                     TaskHStack(task: task)
                 }
                 Spacer()
-                Text("End")
             }
             .background(.gray)
             // 화면을 tap 하면 textfield 영역 숨기고 입력값이 있다면 비운다.
@@ -97,7 +97,7 @@ struct TodoListView_Previews: PreviewProvider {
             Task(id: 4, groupId: 2, title: "SwiftUI", isDone: false, isImportant: false)
         ])
         NavigationView {
-            TodoListView(group: group)
+            TodoListView(group: group, groupIndex: 0)
         }
     }
 }
