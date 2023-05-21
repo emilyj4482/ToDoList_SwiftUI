@@ -9,18 +9,16 @@ import SwiftUI
 
 struct TaskHStack: View {
     
-    var task: Task
-    @State var isDone: Bool = false
+    @State var task: Task
     
     var body: some View {
         HStack {
             Button {
-                isDone.toggle()
+                task.isDone.toggle()
+                print(task)
             } label: {
-                Image(systemName: isDone ? "checkmark.circle" : "circle")
-                    .tint(isDone ? .green : .red)
-                // Image(systemName: task.isDone ? "checkmark.circle" : "circle")
-                    // .tint(task.isDone ? .green : .red)
+                Image(systemName: task.isDone ? "checkmark.circle" : "circle")
+                    .tint(task.isDone ? .green : .red)
             }
             
             Text(task.title)
@@ -28,7 +26,8 @@ struct TaskHStack: View {
             Spacer()
             
             Button {
-
+                task.isImportant.toggle()
+                print(task)
             } label: {
                 Image(systemName: task.isImportant ? "star.fill": "star")
                     .tint(.yellow)

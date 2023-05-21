@@ -14,10 +14,11 @@ struct TodoListView: View {
     var groupIndex: Int
     
     @State var newTaskTitle: String = ""
-    // add New Task Mode : Add a Task 버튼을 눌러 새로운 task를 입력하는 모드 (Add a Task 버튼은 숨김, textfield 및 Done 버튼은 노출한다. false 시 반대)
+    /* add New Task Mode : Add a Task 버튼을 눌러 새로운 task를 입력하는 모드 */
+    // Add a Task btn tap(addNewTaskMode ON) : 1) Add a Task Button hidden 2) TaskField show 3) Done Button show
+    // on Tap Gestrue(addNewTaskMode OFF) : 1) TaskField hidden 2) Add a Task Button show 3) Done Button hidden
     @State var addNewTaskMode: Bool = false
     @FocusState var taskFieldInFocus: Bool
-    
     @State var showAlert: Bool = false
     
     var body: some View {
@@ -43,32 +44,33 @@ struct TodoListView: View {
                 newTaskTitle = ""
             }
             
-            // Add a Task btn tap : 1) Add a Task Button hidden 2) TaskField show 3) Done Button show
-            // on Tap Gestrue : 1) TaskField hidden 2) Add a Task Button show 3) Done Button hidden
-            if addNewTaskMode {
-                HStack {
-                    Image(systemName: "circle")
-                        .foregroundColor(.red)
-                    TextField("Add a Task", text: $newTaskTitle)
-                        .focused($taskFieldInFocus)
-                    Spacer()
-                    Image(systemName: "star")
-                        .foregroundColor(.yellow)
-                }
-                .padding([.top, .bottom], 10)
-            } else {
-                Button {
-                    addNewTaskMode = true
-                    self.taskFieldInFocus = true
-                } label: {
+            // Important list의 경우, star button을 통해서만 task를 추가할 수 있도록 구현 >> Add a Task 기능 비활성화
+            if groupIndex != 0 {
+                if addNewTaskMode {
                     HStack {
-                        Image(systemName: "plus")
-                        Text("Add a Task")
+                        Image(systemName: "circle")
+                            .foregroundColor(.red)
+                        TextField("Add a Task", text: $newTaskTitle)
+                            .focused($taskFieldInFocus)
+                        Spacer()
+                        Image(systemName: "star")
+                            .foregroundColor(.yellow)
                     }
+                    .padding([.top, .bottom], 10)
+                } else {
+                    Button {
+                        addNewTaskMode = true
+                        self.taskFieldInFocus = true
+                    } label: {
+                        HStack {
+                            Image(systemName: "plus")
+                            Text("Add a Task")
+                        }
+                    }
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(.leading, 15)
+                    .padding(.bottom, 5)
                 }
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding(.leading, 15)
-                .padding(.bottom, 5)
             }
         }
         .navigationTitle(group.name)
