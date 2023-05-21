@@ -18,15 +18,25 @@ struct TodoListView: View {
     @State var addNewTaskMode: Bool = false
     @FocusState var taskFieldInFocus: Bool
     
+    @State var showAlert: Bool = false
+    
     var body: some View {
         VStack {
-            VStack {
-                ForEach(taskVM.groups[groupIndex].tasks) { task in
-                    TaskHStack(task: task)
+            ScrollView {
+                VStack {
+                    // 추가된 task hstack이 하나도 없더라도 tap gesture를 인식하기 위한 영역이 보장되도록 처리
+                    if taskVM.groups[groupIndex].tasks.count > 0 {
+                        ForEach(taskVM.groups[groupIndex].tasks) { task in
+                            TaskHStack(task: task)
+                        }
+                        Spacer()
+                    } else {
+                        HStack {
+                            Spacer()
+                        }
+                    }
                 }
-                Spacer()
             }
-            .background(.gray)
             // 화면을 tap 하면 textfield 영역 숨기고 입력값이 있다면 비운다.
             .onTapGesture {
                 addNewTaskMode = false
@@ -65,12 +75,12 @@ struct TodoListView: View {
         .navigationBarTitleDisplayMode(.large)
         .padding([.leading, .trailing], 15)
         .toolbar {
-            //
             addNewTaskMode ?
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
                     // textfield 입력값이 공백인 경우 입력모드를 종료하지 않고 alert 표시
                     if newTaskTitle.trim().isEmpty {
+                        showAlert = true
                     } else {
                         addNewTaskMode = false
                         // Task 추가
@@ -82,6 +92,7 @@ struct TodoListView: View {
                 } label: {
                     Text("Done")
                 }
+                .alert("Your new task must have at least 1 letter.", isPresented: $showAlert) {}
             }
             : nil
         }

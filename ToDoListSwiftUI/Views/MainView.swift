@@ -34,7 +34,7 @@ struct MainView: View {
                 .listStyle(PlainListStyle())
                 
                 Text(
-                    taskVM.groups.count < 2 ? "You have \(taskVM.groups.count) custom list." : "You have \(taskVM.groups.count) custom lists."
+                    taskVM.groups.count < 3 ? "You have \(taskVM.groups.count - 1) custom list." : "You have \(taskVM.groups.count - 1) custom lists."
                 )
                     .font(.system(size: 13))
                     .foregroundColor(.pink)
