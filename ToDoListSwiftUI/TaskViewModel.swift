@@ -81,6 +81,22 @@ class TaskViewModel: ObservableObject {
         }
         updateSingleTask(groupId: task.groupId, taskId: task.id, task: task)
     }
+    
+    // important task인 경우 Important list와 속한 list 양쪽에서 삭제 처리 필요
+    func deleteTaskComplete(_ task: Task) {
+        if task.isImportant {
+            deleteSingleTask(groupId: 1, taskId: task.id)
+        }
+        deleteSingleTask(groupId: task.groupId, taskId: task.id)
+    }
+    
+    private func deleteSingleTask(groupId: Int, taskId: Int) {
+        if let index1 = groups.firstIndex(where: { $0.id == groupId }) {
+            if let index2 = groups[index1].tasks.firstIndex(where: { $0.id == taskId }) {
+                groups[index1].tasks.remove(at: index2)
+            }
+        }
+    }
 }
 
 // 문자열 앞뒤 공백 삭제 메소드 정의
