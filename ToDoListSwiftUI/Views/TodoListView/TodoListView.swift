@@ -28,8 +28,7 @@ struct TodoListView: View {
                     TaskHStack(task: task)
                         .swipeActions {
                             Button {
-                                // taskVM.deleteTaskComplete(task)
-                                print("delete")
+                                taskVM.deleteTaskComplete(task)
                             } label: {
                                 Image(systemName: "trash")
                             }

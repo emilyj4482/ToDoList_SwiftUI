@@ -14,27 +14,22 @@ struct TaskHStack: View {
     
     var body: some View {
         HStack {
-            Button {
-                task.isDone.toggle()
-                taskVM.updateTaskComplete(task)
-                print(taskVM.groups)
-            } label: {
-                Image(systemName: task.isDone ? "checkmark.circle" : "circle")
-                    .tint(task.isDone ? .green : .red)
-            }
-            
+            Image(systemName: task.isDone ? "checkmark.circle" : "circle")
+                .tint(task.isDone ? .green : .red)
+                .onTapGesture {
+                    task.isDone.toggle()
+                    taskVM.updateTaskComplete(task)
+                    print(taskVM.groups)
+                }
             Text(task.title)
-            
             Spacer()
-            
-            Button {
-                task.isImportant.toggle()
-                taskVM.updateImportant(task)
-                print(taskVM.groups)
-            } label: {
-                Image(systemName: task.isImportant ? "star.fill": "star")
-                    .tint(.yellow)
-            }
+            Image(systemName: task.isImportant ? "star.fill": "star")
+                .tint(.yellow)
+                .onTapGesture {
+                    task.isImportant.toggle()
+                    taskVM.updateImportant(task)
+                    print(taskVM.groups)
+                }
         }
         .padding([.top, .bottom], 10)
     }
