@@ -25,16 +25,40 @@ struct TodoListView: View {
         VStack {
             ScrollView {
                 VStack {
-                    // 추가된 task hstack이 하나도 없더라도 tap gesture를 인식하기 위한 영역이 보장되도록 처리
-                    if taskVM.groups[groupIndex].tasks.count > 0 {
+                    List {
+                        // 추가된 task hstack이 하나도 없더라도 tap gesture를 인식하기 위한 영역이 보장되도록 처리
+                        /*
+                         if taskVM.groups[groupIndex].tasks.count > 0 {
+                         ForEach(taskVM.groups[groupIndex].tasks) { task in
+                         TaskHStack(task: task)
+                         .swipeActions {
+                         Button {
+                         taskVM.deleteTaskComplete(task)
+                         } label: {
+                         Image(systemName: "trash")
+                         }
+                         
+                         }
+                         }
+                         Spacer()
+                         } else {
+                         HStack {
+                         Spacer()
+                         }
+                         }
+                         */
                         ForEach(taskVM.groups[groupIndex].tasks) { task in
                             TaskHStack(task: task)
+                                .swipeActions {
+                                    Button {
+                                        taskVM.deleteTaskComplete(task)
+                                    } label: {
+                                        Image(systemName: "trash")
+                                    }
+                                    
+                                }
                         }
                         Spacer()
-                    } else {
-                        HStack {
-                            Spacer()
-                        }
                     }
                 }
             }
