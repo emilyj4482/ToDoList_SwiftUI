@@ -26,16 +26,17 @@ struct TodoListView: View {
             List {
                 ForEach(taskVM.groups[groupIndex].tasks) { task in
                     TaskHStack(task: task)
-                        .swipeActions {
+                        .swipeActions(allowsFullSwipe: false) {
                             Button {
-                                taskVM.deleteTaskComplete(task)
+                                //taskVM.deleteTaskComplete(task)
+                                print("swiped")
                             } label: {
                                 Image(systemName: "trash")
                             }
                         }
                 }
             }
-            .listStyle(PlainListStyle())
+            .listStyle(.plain)
             // 화면을 tap 하면 textfield 영역 숨기고 입력값이 있다면 비운다.
             .onTapGesture {
                 addNewTaskMode = false
@@ -74,26 +75,26 @@ struct TodoListView: View {
         .navigationTitle(group.name)
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
-            addNewTaskMode ?
-            ToolbarItem(placement: .navigationBarTrailing) {
-                Button {
-                    // textfield 입력값이 공백인 경우 입력모드를 종료하지 않고 alert 표시
-                    if newTaskTitle.trim().isEmpty {
-                        showAlert = true
-                    } else {
-                        addNewTaskMode = false
-                        // Task 추가
-                        taskVM.addTask(groupId: group.id, taskVM.createTask(groupId: group.id, newTaskTitle))
-                        print(taskVM.groups)
-                        // textfield 비움
-                        newTaskTitle = ""
+            if addNewTaskMode {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        // textfield 입력값이 공백인 경우 입력모드를 종료하지 않고 alert 표시
+                        if newTaskTitle.trim().isEmpty {
+                            showAlert = true
+                        } else {
+                            addNewTaskMode = false
+                            // Task 추가
+                            taskVM.addTask(groupId: group.id, taskVM.createTask(groupId: group.id, newTaskTitle))
+                            print(taskVM.groups)
+                            // textfield 비움
+                            newTaskTitle = ""
+                        }
+                    } label: {
+                        Text("Done")
                     }
-                } label: {
-                    Text("Done")
+                    .alert("Your new task must have at least 1 letter.", isPresented: $showAlert) {}
                 }
-                .alert("Your new task must have at least 1 letter.", isPresented: $showAlert) {}
             }
-            : nil
         }
     }
 }
