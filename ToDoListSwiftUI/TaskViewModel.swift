@@ -97,6 +97,12 @@ class TaskViewModel: ObservableObject {
             }
         }
     }
+    
+    func deleteGroup(groupId: Int) {
+        if let index = groups.firstIndex(where: { $0.id == groupId }) {
+            groups.remove(at: index)
+        }
+    }
 }
 
 // 문자열 앞뒤 공백 삭제 메소드 정의
