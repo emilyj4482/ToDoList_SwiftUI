@@ -103,6 +103,13 @@ class TaskViewModel: ObservableObject {
             groups.remove(at: index)
         }
     }
+    
+    func updateGroup(groupId: Int, _ name: String) {
+        if let index = groups.firstIndex(where: { $0.id == groupId }) {
+            groups[index].update(name: name)
+        }
+    }
+    
 }
 
 // 문자열 앞뒤 공백 삭제 메소드 정의
