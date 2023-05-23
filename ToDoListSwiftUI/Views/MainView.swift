@@ -27,6 +27,7 @@ struct MainView: View {
                                     .font(.system(size: 10))
                                     .foregroundColor(.gray)
                             }
+                            .padding([.top, .bottom], 5)
                         }
                     }
                 }

@@ -54,7 +54,7 @@ struct TodoListView: View {
                         Image(systemName: "star")
                             .foregroundColor(.yellow)
                     }
-                    .padding([.top, .bottom], 10)
+                    .padding(20)
                 } else {
                     Button {
                         addNewTaskMode = true
@@ -73,7 +73,6 @@ struct TodoListView: View {
         }
         .navigationTitle(group.name)
         .navigationBarTitleDisplayMode(.large)
-        .padding([.leading, .trailing], 15)
         .toolbar {
             addNewTaskMode ?
             ToolbarItem(placement: .navigationBarTrailing) {
