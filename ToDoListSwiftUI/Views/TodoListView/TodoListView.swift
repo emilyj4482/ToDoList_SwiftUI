@@ -23,37 +23,12 @@ struct TodoListView: View {
     // alert 공통 to bind 변수
     @State var showAlert: Bool = false
     
-    // List 이름 영역 : tap 시 수정 모드
-    @State var updateListNameMode: Bool = false
-    @FocusState var listNameInFocus: Bool
+    // textfield alert 변수
+    @State var showFieldAlert: Bool = false
     @State var newListName: String = ""
     
     var body: some View {
-        
         VStack {
-            // List name 영역을 tap 하면 Text view가 Textfield view로 대체된다. (이 때, textfield text는 기존 list name으로 지정한다.)
-            if !updateListNameMode {
-                Text(group.name)
-                    .font(.largeTitle)
-                    .bold()
-                    .padding([.leading, .trailing], 15)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .onTapGesture {
-                        newListName = taskVM.groups[groupIndex].name
-                        updateListNameMode = true
-                        listNameInFocus = true
-                    }
-            } else {
-                TextField(text: $newListName) {
-                    Text(group.name)
-                        .foregroundColor(listNameInFocus ? .gray .opacity(0.5) : .black)
-                }
-                .focused($listNameInFocus)
-                .font(.largeTitle)
-                .bold()
-                .padding([.leading, .trailing], 15)
-            }
-            
             List {
                 ForEach(taskVM.groups[groupIndex].tasks) { task in
                     TaskHStack(task: task)
@@ -70,9 +45,6 @@ struct TodoListView: View {
             .listStyle(.plain)
             // 화면을 tap 하면 textfield 영역 숨기고 입력값이 있다면 비운다.
             .onTapGesture {
-                updateListNameMode = false
-                listNameInFocus = false
-                newListName = taskVM.groups[groupIndex].name
                 addNewTaskMode = false
                 newTaskTitle = ""
             }
@@ -90,10 +62,7 @@ struct TodoListView: View {
                             .foregroundColor(.yellow)
                     }
                     .padding(20)
-                } else if updateListNameMode {
-                    /* list name 수정 모드 시 Add a Task Button 숨김 */
-                }
-                else {
+                } else {
                     Button {
                         addNewTaskMode = true
                         self.taskFieldInFocus = true
@@ -109,8 +78,8 @@ struct TodoListView: View {
                 }
             }
         }
-        // .navigationTitle(group.name)
-        .navigationBarTitleDisplayMode(.inline)
+        .navigationTitle(taskVM.groups[groupIndex].name)
+        .navigationBarTitleDisplayMode(.large)
         .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if addNewTaskMode {
@@ -125,18 +94,20 @@ struct TodoListView: View {
                             Text("Done")
                         }
                         .alert("You must type at least 1 letter.", isPresented: $showAlert) {}
-                    } else if updateListNameMode {
+                    } else {
                         Button {
-                            // textfield 입력값이 공백인 경우 입력모드를 종료하지 않고 alert 표시
-                            if newListName.trim().isEmpty {
-                                showAlert = true
-                            } else {
-                                updateListName(newListName)
-                            }
+                            showFieldAlert = true
                         } label: {
-                            Text("Done")
+                            Text("Rename")
                         }
-                        .alert("You must type at least 1 letter.", isPresented: $showAlert) {}
+                        .alert("Enter a new name for the list.", isPresented: $showFieldAlert) {
+                            TextField(taskVM.groups[groupIndex].name, text: $newListName)
+                            Button("Confirm") {
+                                taskVM.updateGroup(groupId: group.id, newListName)
+                            }
+                            Button("Cancel", role: .cancel, action: {})
+                        }
+
                     }
             }
         }
@@ -148,11 +119,5 @@ struct TodoListView: View {
         taskVM.addTask(groupId: group.id, taskVM.createTask(groupId: group.id, newTaskTitle))
         // textfield 비움
         newTaskTitle = ""
-    }
-    
-    func updateListName(_ newListName: String) {
-        updateListNameMode = false
-        // List 이름 update
-        taskVM.updateGroup(groupId: group.id, newListName)
     }
 }
