@@ -28,6 +28,17 @@ struct MainView: View {
                                     .foregroundColor(.gray)
                             }
                             .padding([.top, .bottom], 5)
+                            .swipeActions(allowsFullSwipe: false) {
+                                // important list는 삭제 불가
+                                if group.id != 1 {
+                                    Button {
+                                        taskVM.deleteGroup(groupId: group.id)
+                                        print(taskVM.groups)
+                                    } label: {
+                                        Image(systemName: "trash")
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -70,4 +81,3 @@ struct MainView_Previews: PreviewProvider {
         MainView()
     }
 }
-
