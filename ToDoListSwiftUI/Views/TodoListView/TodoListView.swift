@@ -62,6 +62,8 @@ struct TodoListView: View {
                             .foregroundColor(.yellow)
                     }
                     .padding(20)
+                } else if showFieldAlert {
+                    // list name upate mode 시 모든 view 숨김
                 } else {
                     Button {
                         addNewTaskMode = true
@@ -103,7 +105,10 @@ struct TodoListView: View {
                         .alert("Enter a new name for the list.", isPresented: $showFieldAlert) {
                             TextField(taskVM.groups[groupIndex].name, text: $newListName)
                             Button("Confirm") {
-                                taskVM.updateGroup(groupId: group.id, newListName)
+                                // 입력값이 아예 없거나 공백만 입력했을 경우 완료되지 않도록 처리
+                                if !newListName.trim().isEmpty {
+                                    taskVM.updateGroup(groupId: group.id, newListName)
+                                }
                             }
                             Button("Cancel", role: .cancel, action: {})
                         }
