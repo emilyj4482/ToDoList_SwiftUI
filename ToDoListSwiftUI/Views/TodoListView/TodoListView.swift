@@ -30,6 +30,20 @@ struct TodoListView: View {
     var body: some View {
         VStack {
             List {
+                Section {
+                    ForEach(taskVM.unDoneTasks(gouprIndex: groupIndex)) { task in
+                        TaskHStack(task: task)
+                    }
+                }
+                // done task가 하나라도 있어야 Done section 노출
+                if taskVM.isDoneTasks(gouprIndex: groupIndex).count != 0 {
+                    Section("Done") {
+                        ForEach(taskVM.isDoneTasks(gouprIndex: groupIndex)) { task in
+                            TaskHStack(task: task)
+                        }
+                    }
+                }
+                /*
                 ForEach(taskVM.groups[groupIndex].tasks) { task in
                     TaskHStack(task: task)
                         .swipeActions(allowsFullSwipe: false) {
@@ -41,6 +55,7 @@ struct TodoListView: View {
                             }
                         }
                 }
+                */
             }
             .listStyle(.plain)
             // 화면을 tap 하면 textfield 영역 숨김
@@ -92,9 +107,9 @@ struct TodoListView: View {
                             if newTaskTitle.trim().isEmpty {
                                 showAlert = true
                             } else {
-                                hideTextfield()
                                 // Task 추가
                                 taskVM.addTask(groupId: group.id, taskVM.createTask(groupId: group.id, newTaskTitle))
+                                hideTextfield()
                             }
                         } label: {
                             Text("Done")
