@@ -14,7 +14,6 @@ struct AddNewListView: View {
     
     @State var listName: String = ""
     @State var showAlert: Bool = false
-    
     @FocusState var focused: Bool
     
     var body: some View {

@@ -20,10 +20,10 @@ struct TodoListView: View {
     @FocusState var taskFieldInFocus: Bool
     @State var newTaskTitle: String = ""
     
-    // alert 공통 to bind 변수
+    // task 추가 시 입력값 없을 때 alert 변수
     @State var showAlert: Bool = false
     
-    // textfield alert 변수
+    // task 수정 textfield alert 변수
     @State var showFieldAlert: Bool = false
     @State var newListName: String = ""
     
@@ -31,13 +31,13 @@ struct TodoListView: View {
         VStack {
             List {
                 Section {
-                    ForEach(taskVM.unDoneTasks(gouprIndex: groupIndex)) { task in
+                    ForEach(taskVM.unDoneTasks(groupIndex: groupIndex)) { task in
                         TaskHStack(task: task)
                     }
                 }
                 // done task가 하나라도 있어야 Done header 노출
-                Section(taskVM.isDoneTasks(gouprIndex: groupIndex).count != 0 ? "Done" : "") {
-                        ForEach(taskVM.isDoneTasks(gouprIndex: groupIndex)) { task in
+                Section(taskVM.isDoneTasks(groupIndex: groupIndex).count != 0 ? "Done" : "") {
+                        ForEach(taskVM.isDoneTasks(groupIndex: groupIndex)) { task in
                             TaskHStack(task: task)
                         }
                     }

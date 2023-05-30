@@ -111,12 +111,12 @@ class TaskViewModel: ObservableObject {
     }
     
     // task.isDone 여부에 따라 section 분리
-    func unDoneTasks(gouprIndex: Int) -> [Task] {
-        return groups[gouprIndex].tasks.filter({ $0.isDone == false })
+    func unDoneTasks(groupIndex: Int) -> [Task] {
+        return groups[groupIndex].tasks.filter({ $0.isDone == false })
     }
     
-    func isDoneTasks(gouprIndex: Int) -> [Task] {
-        return groups[gouprIndex].tasks.filter({ $0.isDone == true })
+    func isDoneTasks(groupIndex: Int) -> [Task] {
+        return groups[groupIndex].tasks.filter({ $0.isDone == true })
     }
     
 }
