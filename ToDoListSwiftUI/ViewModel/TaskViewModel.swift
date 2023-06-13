@@ -18,13 +18,6 @@ class TaskViewModel: ObservableObject {
     // Important group은 고정값
     @Published var groups: [Group] = [Group(id: 1, name: "Important", tasks: [])]
     
-    // 선택된 group 저장용 프로퍼티
-    @Published var selectedGroup: Group?
-    // 선택된 group index 저장용 프로퍼티
-    @Published var selectedGroupIndex: Int?
-    // navigation destination isPresented
-    @Published var navLinkPresented: Bool = false
-    
     func createGroup(_ groupName: String) -> Group {
         let nextId = lastGroupId + 1
         lastGroupId = nextId

@@ -16,9 +16,7 @@ struct MainView: View {
             VStack {
                 List {
                     ForEach($taskVM.groups) { $group in
-                        NavigationLink {
-                            
-                        } label: {
+                        NavigationLink(value: group) {
                             HStack {
                                 Image(systemName: group.id == 1 ? "star.fill" : "checklist.checked")
                                 Text(group.name)
@@ -39,13 +37,6 @@ struct MainView: View {
                                     }
                                 }
                             }
-                        }
-                        .onTapGesture {
-                            // ViewModel에 선택된 group 정보 전달
-                            taskVM.selectedGroup = group
-                            taskVM.selectedGroupIndex = taskVM.groups.firstIndex(where: { $0.id == group.id })
-                            print(taskVM.selectedGroup!)
-                            taskVM.navLinkPresented = true
                         }
                     }
                 }
@@ -75,9 +66,9 @@ struct MainView: View {
                 
             }
             .navigationTitle("ToDoList")
-            .navigationDestination(isPresented: $taskVM.navLinkPresented) {
-                TodoListView()
-            }
+            .navigationDestination(for: Group.self, destination: { group in
+                TodoListView(selectedGroup: group, selectedGroupIndex: taskVM.groups.firstIndex(where: { $0.id == group.id })!)
+            })
         }
         .environmentObject(taskVM)
     }
