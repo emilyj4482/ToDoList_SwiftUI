@@ -37,7 +37,7 @@ struct TodoListView: View {
                 }
                 // done task가 하나라도 있어야 Done header 노출
                 Section(taskVM.isDoneTasks(groupIndex: selectedGroupIndex).count != 0 ? "Done" : "") {
-                        ForEach(taskVM.isDoneTasks(groupIndex: selectedGroupIndex)) { task in
+                    ForEach(taskVM.isDoneTasks(groupIndex: selectedGroupIndex)) { task in
                             TaskHStack(task: task)
                         }
                     }
