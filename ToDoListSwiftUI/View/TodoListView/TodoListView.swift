@@ -127,6 +127,8 @@ struct TodoListView: View {
                                     // 입력값이 아예 없거나 공백만 입력했을 경우 완료되지 않도록 처리
                                     if !newListName.trim().isEmpty {
                                         taskVM.updateGroup(groupId: selectedGroup.id, newListName)
+                                        // 현재 화면에도 적용
+                                        selectedGroup.name = newListName
                                     }
                                 }
                                 Button("Cancel", role: .cancel, action: {})
