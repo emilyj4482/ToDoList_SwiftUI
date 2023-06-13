@@ -14,10 +14,11 @@ struct MainView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                
                 List {
-                    ForEach(taskVM.groups) { group in
-                        NavigationLink(value: group) {
+                    ForEach($taskVM.groups) { $group in
+                        NavigationLink {
+                            
+                        } label: {
                             HStack {
                                 Image(systemName: group.id == 1 ? "star.fill" : "checklist.checked")
                                 Text(group.name)
@@ -39,6 +40,13 @@ struct MainView: View {
                                 }
                             }
                         }
+                        .onTapGesture {
+                            // ViewModel에 선택된 group 정보 전달
+                            taskVM.selectedGroup = group
+                            taskVM.selectedGroupIndex = taskVM.groups.firstIndex(where: { $0.id == group.id })
+                            print(taskVM.selectedGroup!)
+                            taskVM.navLinkPresented = true
+                        }
                     }
                 }
                 .scrollContentBackground(.hidden)
@@ -47,11 +55,11 @@ struct MainView: View {
                 Text(
                     taskVM.groups.count < 3 ? "You have \(taskVM.groups.count - 1) custom list." : "You have \(taskVM.groups.count - 1) custom lists."
                 )
-                    .font(.system(size: 13))
-                    .foregroundColor(.pink)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.leading, 30)
-                    .padding(.bottom, 5)
+                .font(.system(size: 13))
+                .foregroundColor(.pink)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, 30)
+                .padding(.bottom, 5)
                 
                 NavigationLink {
                     AddNewListView()
@@ -67,8 +75,8 @@ struct MainView: View {
                 
             }
             .navigationTitle("ToDoList")
-            .navigationDestination(for: Group.self) { group in
-                TodoListView(group: group, groupIndex: taskVM.groups.firstIndex(where: { $0.id == group.id }) ?? 0)
+            .navigationDestination(isPresented: $taskVM.navLinkPresented) {
+                TodoListView()
             }
         }
         .environmentObject(taskVM)

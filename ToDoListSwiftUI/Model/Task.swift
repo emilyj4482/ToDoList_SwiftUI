@@ -7,8 +7,6 @@
 
 import Foundation
 
-/* Model */
-
 // 할 일 Object
 struct Task: Identifiable, Codable, Hashable {
     let id: Int
