@@ -31,14 +31,14 @@ struct TodoListView: View {
         VStack {
             List {
                 Section {
-                    ForEach(taskVM.unDoneTasks(groupIndex: selectedGroupIndex)) { task in
-                        TaskHStack(task: task)
+                    ForEach(taskVM.undoneTasks) { task in
+                        TaskHStack(task: task, groupIndex: $selectedGroupIndex)
                     }
                 }
                 // done task가 하나라도 있어야 Done header 노출
-                Section(taskVM.isDoneTasks(groupIndex: selectedGroupIndex).count != 0 ? "Done" : "") {
-                    ForEach(taskVM.isDoneTasks(groupIndex: selectedGroupIndex)) { task in
-                            TaskHStack(task: task)
+                Section((taskVM.doneTasks).count != 0 ? "Done" : "") {
+                    ForEach(taskVM.doneTasks) { task in
+                        TaskHStack(task: task, groupIndex: $selectedGroupIndex)
                         }
                     }
                 /*
@@ -107,6 +107,8 @@ struct TodoListView: View {
                             } else {
                                 // Task 추가
                                 taskVM.addTask(groupId: selectedGroup.id, taskVM.createTask(groupId: selectedGroup.id, newTaskTitle))
+                                // done section view 적용
+                                taskVM.reloadTasks(selectedGroupIndex)
                                 hideTextfield()
                             }
                         } label: {
@@ -136,6 +138,9 @@ struct TodoListView: View {
                         }
                     }
             }
+        }
+        .onAppear {
+            taskVM.reloadTasks(selectedGroupIndex)
         }
     }
     
