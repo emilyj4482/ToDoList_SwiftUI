@@ -31,8 +31,6 @@ struct TaskHStack: View {
                 .onTapGesture {
                     task.isImportant.toggle()
                     taskVM.updateImportant(task)
-                    taskVM.reloadTasks(groupIndex)
-                    print(taskVM.groups)
                 }
         }
         .padding([.top, .bottom], 5)
