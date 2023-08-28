@@ -21,7 +21,7 @@ struct TaskHStack: View {
                 .onTapGesture {
                     task.isDone.toggle()
                     taskVM.updateTaskComplete(task)
-                    taskVM.reloadTasks(groupIndex)
+                    // taskVM.reloadTasks(groupIndex)
                     print(taskVM.groups)
                 }
             Text(task.title)

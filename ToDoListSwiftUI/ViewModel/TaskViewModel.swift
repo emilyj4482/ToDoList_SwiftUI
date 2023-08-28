@@ -19,8 +19,8 @@ class TaskViewModel: ObservableObject {
     @Published var groups: [Group] = [Group(id: 1, name: "Important", tasks: [])]
     
     // task done section 분리를 위한 done / undone tasks 저장 프로퍼티
-    @Published var undoneTasks: [Task] = []
-    @Published var doneTasks: [Task] = []
+    // @Published var undoneTasks: [Task] = []
+    // @Published var doneTasks: [Task] = []
     
     func createGroup(_ groupName: String) -> Group {
         let nextId = lastGroupId + 1
@@ -114,11 +114,12 @@ class TaskViewModel: ObservableObject {
         }
     }
 
-    // list에 속한 task들을 isDone 여부에 따라 구분
+    /* list에 속한 task들을 isDone 여부에 따라 구분
     func reloadTasks(_ groupIndex: Int) {
         undoneTasks = groups[groupIndex].tasks.filter({ $0.isDone == false })
         doneTasks = groups[groupIndex].tasks.filter({ $0.isDone == true })
     }
+    */
     
 }
 

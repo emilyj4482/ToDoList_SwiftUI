@@ -30,6 +30,7 @@ struct TodoListView: View {
     var body: some View {
         VStack {
             List {
+                /* task.isDone 여부에 따른 section 분리 작업 보류
                 Section {
                     ForEach(taskVM.undoneTasks) { task in
                         TaskHStack(task: task, groupIndex: $selectedGroupIndex)
@@ -39,11 +40,12 @@ struct TodoListView: View {
                 Section((taskVM.doneTasks).count != 0 ? "Tasks done!" : "") {
                     ForEach(taskVM.doneTasks) { task in
                         TaskHStack(task: task, groupIndex: $selectedGroupIndex)
-                        }
                     }
-                /*
-                ForEach(taskVM.groups[groupIndex].tasks) { task in
-                    TaskHStack(task: task)
+                }
+                */
+                
+                ForEach(taskVM.groups[selectedGroupIndex].tasks) { task in
+                    TaskHStack(task: task, groupIndex: $selectedGroupIndex)
                         .swipeActions(allowsFullSwipe: false) {
                             Button {
                                 //taskVM.deleteTaskComplete(task)
@@ -53,7 +55,6 @@ struct TodoListView: View {
                             }
                         }
                 }
-                */
             }
             .listStyle(.plain)
             // 화면을 tap 하면 textfield 영역 숨김
@@ -108,7 +109,7 @@ struct TodoListView: View {
                                 // Task 추가
                                 taskVM.addTask(groupId: selectedGroup.id, taskVM.createTask(groupId: selectedGroup.id, newTaskTitle))
                                 // done section view 적용
-                                taskVM.reloadTasks(selectedGroupIndex)
+                                // taskVM.reloadTasks(selectedGroupIndex)
                                 hideTextfield()
                             }
                         } label: {
@@ -140,7 +141,7 @@ struct TodoListView: View {
             }
         }
         .onAppear {
-            taskVM.reloadTasks(selectedGroupIndex)
+            // taskVM.reloadTasks(selectedGroupIndex)
         }
     }
     
