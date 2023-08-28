@@ -11,7 +11,13 @@ struct MainView: View {
     
     @StateObject var taskVM: TaskViewModel = TaskViewModel()
     
-    @State private var showAddView = false
+    @State private var showAddView: Bool = false
+    
+    /* group delete */
+    // swipe action으로 delete button tap 시 확인하는 action sheet 호출
+    @State private var showActionSheet: Bool = false
+    // 잘못된 group 삭제 방지를 위해 실제 삭제 될 group을 담기 위한 빈 값
+    @State private var itemToDelete: Group? = nil
     
     var body: some View {
         NavigationStack {
@@ -29,18 +35,30 @@ struct MainView: View {
                             }
                             .padding([.top, .bottom], 5)
                             .swipeActions(allowsFullSwipe: false) {
-                                // important list는 삭제 불가
+                                // important list는 삭제 불가, 삭제 여부를 확인하는 action sheet 호출
                                 if group.id != 1 {
                                     Button {
-                                        taskVM.deleteGroup(groupId: group.id)
-                                        print(taskVM.groups)
+                                        itemToDelete = group
+                                        showActionSheet = true
                                     } label: {
                                         Image(systemName: "trash")
                                     }
                                 }
+                                
                             }
+                            
                         }
                     }
+                }
+                .confirmationDialog("Are you sure deleting the list?", isPresented: $showActionSheet, titleVisibility: .visible) {
+                    Button("Delete", role: .destructive) {
+                        if let item = itemToDelete {
+                            taskVM.deleteGroup(groupId: item.id)
+                        }
+                        itemToDelete = nil
+                    }
+                    
+                    Button("Cancel", role: .cancel) {}
                 }
                 .scrollContentBackground(.hidden)
                 .listStyle(PlainListStyle())
