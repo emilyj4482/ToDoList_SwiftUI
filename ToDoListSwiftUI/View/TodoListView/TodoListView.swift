@@ -10,8 +10,8 @@ import SwiftUI
 struct TodoListView: View {
     
     @EnvironmentObject var taskVM: TaskViewModel
-    var group: Group
-    var groupIndex: Int
+    @State var selectedGroup: Group
+    @State var selectedGroupIndex: Int
     
     /* add New Task Mode : Add a Task 버튼을 눌러 새로운 task를 입력하는 모드 */
     // Add a Task btn tap(addNewTaskMode ON) : 1) Add a Task Button hidden 2) TaskField show 3) Done Button show
@@ -20,18 +20,32 @@ struct TodoListView: View {
     @FocusState var taskFieldInFocus: Bool
     @State var newTaskTitle: String = ""
     
-    // alert 공통 to bind 변수
+    // task 추가 시 입력값 없을 때 alert 변수
     @State var showAlert: Bool = false
     
-    // textfield alert 변수
+    // task 수정 textfield alert 변수
     @State var showFieldAlert: Bool = false
     @State var newListName: String = ""
     
     var body: some View {
         VStack {
             List {
-                ForEach(taskVM.groups[groupIndex].tasks) { task in
-                    TaskHStack(task: task)
+                /* task.isDone 여부에 따른 section 분리 작업 보류
+                Section {
+                    ForEach(taskVM.undoneTasks) { task in
+                        TaskHStack(task: task, groupIndex: $selectedGroupIndex)
+                    }
+                }
+                // done task가 하나라도 있어야 Done header 노출
+                Section((taskVM.doneTasks).count != 0 ? "Tasks done!" : "") {
+                    ForEach(taskVM.doneTasks) { task in
+                        TaskHStack(task: task, groupIndex: $selectedGroupIndex)
+                    }
+                }
+                */
+                
+                ForEach(taskVM.groups[selectedGroupIndex].tasks) { task in
+                    TaskHStack(task: task, groupIndex: $selectedGroupIndex)
                         .swipeActions(allowsFullSwipe: false) {
                             Button {
                                 //taskVM.deleteTaskComplete(task)
@@ -49,7 +63,7 @@ struct TodoListView: View {
             }
             
             // Important list의 경우, star button을 통해서만 task를 추가할 수 있도록 구현 >> Add a Task 기능 비활성화
-            if groupIndex != 0 {
+            if selectedGroupIndex != 0 {
                 if addNewTaskMode {
                     HStack {
                         Image(systemName: "circle")
@@ -82,7 +96,7 @@ struct TodoListView: View {
                 }
             }
         }
-        .navigationTitle(taskVM.groups[groupIndex].name)
+        .navigationTitle(selectedGroup.name)
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -92,9 +106,11 @@ struct TodoListView: View {
                             if newTaskTitle.trim().isEmpty {
                                 showAlert = true
                             } else {
-                                hideTextfield()
                                 // Task 추가
-                                taskVM.addTask(groupId: group.id, taskVM.createTask(groupId: group.id, newTaskTitle))
+                                taskVM.addTask(groupId: selectedGroup.id, taskVM.createTask(groupId: selectedGroup.id, newTaskTitle))
+                                // done section view 적용
+                                // taskVM.reloadTasks(selectedGroupIndex)
+                                hideTextfield()
                             }
                         } label: {
                             Text("Done")
@@ -102,18 +118,20 @@ struct TodoListView: View {
                         .alert("You must type at least 1 letter.", isPresented: $showAlert) {}
                     } else {
                         // Important list의 경우, rename 불가
-                        if groupIndex != 0 {
+                        if selectedGroupIndex != 0 {
                             Button {
                                 showFieldAlert = true
                             } label: {
                                 Text("Rename")
                             }
                             .alert("Enter a new name for the list.", isPresented: $showFieldAlert) {
-                                TextField(taskVM.groups[groupIndex].name, text: $newListName)
+                                TextField(taskVM.groups[selectedGroupIndex].name, text: $newListName)
                                 Button("Confirm") {
                                     // 입력값이 아예 없거나 공백만 입력했을 경우 완료되지 않도록 처리
                                     if !newListName.trim().isEmpty {
-                                        taskVM.updateGroup(groupId: group.id, newListName)
+                                        taskVM.updateGroup(groupId: selectedGroup.id, newListName)
+                                        // 현재 화면에도 적용
+                                        selectedGroup.name = newListName
                                     }
                                 }
                                 Button("Cancel", role: .cancel, action: {})
@@ -121,6 +139,9 @@ struct TodoListView: View {
                         }
                     }
             }
+        }
+        .onAppear {
+            // taskVM.reloadTasks(selectedGroupIndex)
         }
     }
     

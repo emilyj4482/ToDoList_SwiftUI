@@ -10,14 +10,12 @@ import SwiftUI
 struct MainView: View {
     
     @StateObject var taskVM: TaskViewModel = TaskViewModel()
-    @State var path: [Group] = []
     
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack {
             VStack {
-                
                 List {
-                    ForEach(taskVM.groups) { group in
+                    ForEach($taskVM.groups) { $group in
                         NavigationLink(value: group) {
                             HStack {
                                 Image(systemName: group.id == 1 ? "star.fill" : "checklist.checked")
@@ -48,11 +46,11 @@ struct MainView: View {
                 Text(
                     taskVM.groups.count < 3 ? "You have \(taskVM.groups.count - 1) custom list." : "You have \(taskVM.groups.count - 1) custom lists."
                 )
-                    .font(.system(size: 13))
-                    .foregroundColor(.pink)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.leading, 30)
-                    .padding(.bottom, 5)
+                .font(.system(size: 13))
+                .foregroundColor(.pink)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.leading, 30)
+                .padding(.bottom, 5)
                 
                 NavigationLink {
                     AddNewListView()
@@ -68,9 +66,9 @@ struct MainView: View {
                 
             }
             .navigationTitle("ToDoList")
-            .navigationDestination(for: Group.self) { group in
-                TodoListView(group: group, groupIndex: taskVM.groups.firstIndex(where: { $0.id == group.id }) ?? 0)
-            }
+            .navigationDestination(for: Group.self, destination: { group in
+                TodoListView(selectedGroup: group, selectedGroupIndex: taskVM.groups.firstIndex(where: { $0.id == group.id })!)
+            })
         }
         .environmentObject(taskVM)
     }
