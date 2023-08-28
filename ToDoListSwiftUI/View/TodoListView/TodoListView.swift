@@ -48,11 +48,18 @@ struct TodoListView: View {
                     TaskHStack(task: task, groupIndex: $selectedGroupIndex)
                         .swipeActions(allowsFullSwipe: false) {
                             Button {
-                                //taskVM.deleteTaskComplete(task)
                                 print("swiped")
+                                // taskVM.deleteTaskComplete(task)
                             } label: {
                                 Image(systemName: "trash")
                             }
+                            
+                            Button {
+                                print("swiped")
+                            } label: {
+                                Image(systemName: "pencil")
+                            }
+                            .tint(.cyan)
                         }
                 }
             }

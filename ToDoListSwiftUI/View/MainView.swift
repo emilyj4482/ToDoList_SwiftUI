@@ -11,11 +11,13 @@ struct MainView: View {
     
     @StateObject var taskVM: TaskViewModel = TaskViewModel()
     
+    @State private var showAddView = false
+    
     var body: some View {
         NavigationStack {
             VStack {
                 List {
-                    ForEach($taskVM.groups) { $group in
+                    ForEach(taskVM.groups) { group in
                         NavigationLink(value: group) {
                             HStack {
                                 Image(systemName: group.id == 1 ? "star.fill" : "checklist.checked")
@@ -52,8 +54,8 @@ struct MainView: View {
                 .padding(.leading, 30)
                 .padding(.bottom, 5)
                 
-                NavigationLink {
-                    AddNewListView()
+                Button {
+                    showAddView.toggle()
                 } label: {
                     HStack {
                         Image(systemName: "plus")
@@ -63,9 +65,13 @@ struct MainView: View {
                     .padding(.leading, 30)
                     .padding(.bottom, 5)
                 }
-                
             }
             .navigationTitle("ToDoList")
+            .sheet(isPresented: $showAddView) {
+                NavigationStack {
+                    AddNewListView()
+                }
+            }
             .navigationDestination(for: Group.self, destination: { group in
                 TodoListView(selectedGroup: group, selectedGroupIndex: taskVM.groups.firstIndex(where: { $0.id == group.id })!)
             })

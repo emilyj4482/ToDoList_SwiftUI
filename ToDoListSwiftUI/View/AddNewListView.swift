@@ -13,7 +13,6 @@ struct AddNewListView: View {
     @EnvironmentObject var taskVM: TaskViewModel
     
     @State var listName: String = ""
-    @State var showAlert: Bool = false
     @FocusState var focused: Bool
     
     var body: some View {
@@ -37,12 +36,10 @@ struct AddNewListView: View {
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
                     taskVM.addGroup(taskVM.createGroup(getListName(listName)))
-                    showAlert = true
                     dismiss()
                 } label: {
                     Text("Done")
                 }
-                .alert("A new list has been added successfully.", isPresented: $showAlert) {}
             }
         }
         // 화면이 뜨자마자 텍스트필드 입력 모드
