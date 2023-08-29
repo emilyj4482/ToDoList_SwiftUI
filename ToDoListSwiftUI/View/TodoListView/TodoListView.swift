@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TodoListView: View {
     
-    @EnvironmentObject var taskVM: TaskViewModel
+    @EnvironmentObject var taskVM: OldTaskViewModel
     @State var selectedGroup: Group
     @State var selectedGroupIndex: Int
     

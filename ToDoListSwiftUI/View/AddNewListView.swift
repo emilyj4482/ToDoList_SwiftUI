@@ -10,7 +10,7 @@ import SwiftUI
 struct AddNewListView: View {
     
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var taskVM: TaskViewModel
+    @EnvironmentObject var taskVM: OldTaskViewModel
     
     @State var listName: String = ""
     @FocusState var focused: Bool

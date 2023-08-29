@@ -9,7 +9,7 @@ import SwiftUI
 
 struct TaskHStack: View {
     
-    @EnvironmentObject var taskVM: TaskViewModel
+    @EnvironmentObject var taskVM: OldTaskViewModel
     @State var task: Task
     
     @Binding var groupIndex: Int

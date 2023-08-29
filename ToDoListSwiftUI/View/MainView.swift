@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     
-    @StateObject var taskVM: TaskViewModel = TaskViewModel()
+    @StateObject var taskVM: OldTaskViewModel = OldTaskViewModel()
     
     @State private var showAddView: Bool = false
     
