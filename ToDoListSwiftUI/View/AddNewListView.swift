@@ -10,7 +10,7 @@ import SwiftUI
 struct AddNewListView: View {
     
     @Environment(\.dismiss) private var dismiss
-    @EnvironmentObject var taskVM: OldTaskViewModel
+    @EnvironmentObject var groupVM: GroupViewModel
     
     @State var listName: String = ""
     @FocusState var focused: Bool
@@ -35,7 +35,7 @@ struct AddNewListView: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    taskVM.addGroup(taskVM.createGroup(getListName(listName)))
+                    groupVM.addGroup(groupVM.createGroup(getListName(listName)))
                     dismiss()
                 } label: {
                     Text("Done")

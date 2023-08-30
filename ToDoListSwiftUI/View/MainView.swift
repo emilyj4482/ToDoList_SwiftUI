@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     
-    @StateObject var taskVM: OldTaskViewModel = OldTaskViewModel()
+    @StateObject var groupVM: GroupViewModel = GroupViewModel()
     
     @State private var showAddView: Bool = false
     
@@ -20,18 +20,23 @@ struct MainView: View {
     @State private var itemToDelete: Group? = nil
     
     var body: some View {
+        
+        @State var groups: [Group] = groupVM.todoDic.keys.sorted(by: { $0.id < $1.id })
+        
         NavigationStack {
             VStack {
                 List {
-                    ForEach(taskVM.groups) { group in
+                    ForEach(groups) { group in
                         NavigationLink(value: group) {
                             HStack {
                                 Image(systemName: group.id == 1 ? "star.fill" : "checklist.checked")
                                 Text(group.name)
                                 Spacer()
-                                Text("\(group.tasks.count)")
+                            
+                                Text("\(groupVM.todoDic[group]?.count ?? 0)")
                                     .font(.system(size: 10))
                                     .foregroundColor(.gray)
+                              
                             }
                             .padding([.top, .bottom], 5)
                             .swipeActions(allowsFullSwipe: false) {
@@ -53,7 +58,7 @@ struct MainView: View {
                 .confirmationDialog("Are you sure deleting the list?", isPresented: $showActionSheet, titleVisibility: .visible) {
                     Button("Delete", role: .destructive) {
                         if let item = itemToDelete {
-                            taskVM.deleteGroup(groupId: item.id)
+                            groupVM.deleteGroup(item)
                         }
                         itemToDelete = nil
                     }
@@ -64,7 +69,7 @@ struct MainView: View {
                 .listStyle(PlainListStyle())
                 
                 Text(
-                    taskVM.groups.count < 3 ? "You have \(taskVM.groups.count - 1) custom list." : "You have \(taskVM.groups.count - 1) custom lists."
+                    groupVM.groups.count < 3 ? "You have \(groupVM.groups.count - 1) custom list." : "You have \(groupVM.groups.count - 1) custom lists."
                 )
                 .font(.system(size: 13))
                 .foregroundColor(.pink)
@@ -90,16 +95,18 @@ struct MainView: View {
                     AddNewListView()
                 }
             }
+            
             .navigationDestination(for: Group.self, destination: { group in
-                TodoListView(selectedGroup: group, selectedGroupIndex: taskVM.groups.firstIndex(where: { $0.id == group.id })!)
+                TodoListView(taskVM: TaskViewModel(group: group, tasks: groupVM.todoDic[group] ?? [], todoDic: $groupVM.todoDic))
             })
+            
         }
-        .environmentObject(taskVM)
+        .environmentObject(groupVM)
     }
 }
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView()
+        MainView(groupVM: GroupViewModel())
     }
 }

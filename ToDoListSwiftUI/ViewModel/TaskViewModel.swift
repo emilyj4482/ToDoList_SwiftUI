@@ -52,9 +52,11 @@ final class TaskViewModel: ObservableObject {
     func updateImportant(_ task: Task) {
         if task.isImportant {
             todoDic.wrappedValue[important]?.append(task)
+            print(todoDic)
         } else {
             if let index = todoDic.wrappedValue[important]?.firstIndex(where: { $0.id == task.id }) {
                 todoDic.wrappedValue[important]?.remove(at: index)
+                print(todoDic)
             }
         }
         updateSingleTask(taskId: task.id, task: task)

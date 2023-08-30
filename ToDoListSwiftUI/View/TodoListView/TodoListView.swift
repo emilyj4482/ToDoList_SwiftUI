@@ -9,9 +9,13 @@ import SwiftUI
 
 struct TodoListView: View {
     
-    @EnvironmentObject var taskVM: OldTaskViewModel
-    @State var selectedGroup: Group
-    @State var selectedGroupIndex: Int
+    // @EnvironmentObject var taskVM: OldTaskViewModel
+    // @State var selectedGroup: Group
+    // @State var selectedGroupIndex: Int
+    
+    @StateObject var taskVM: TaskViewModel
+    @EnvironmentObject var groupVM: GroupViewModel
+    
     
     /* add New Task Mode : Add a Task 버튼을 눌러 새로운 task를 입력하는 모드 */
     // Add a Task btn tap(addNewTaskMode ON) : 1) Add a Task Button hidden 2) TaskField show 3) Done Button show
@@ -44,8 +48,8 @@ struct TodoListView: View {
                 }
                 */
                 
-                ForEach(taskVM.groups[selectedGroupIndex].tasks) { task in
-                    TaskHStack(task: task, groupIndex: $selectedGroupIndex)
+                ForEach(groupVM.todoDic[taskVM.group] ?? []) { task in
+                    TaskHStack(taskVM: taskVM, task: task)
                         .swipeActions(allowsFullSwipe: false) {
                             Button {
                                 print("swiped")
@@ -70,7 +74,7 @@ struct TodoListView: View {
             }
             
             // Important list의 경우, star button을 통해서만 task를 추가할 수 있도록 구현 >> Add a Task 기능 비활성화
-            if selectedGroupIndex != 0 {
+            if taskVM.group.id != 1 {
                 if addNewTaskMode {
                     HStack {
                         Image(systemName: "circle")
@@ -103,7 +107,7 @@ struct TodoListView: View {
                 }
             }
         }
-        .navigationTitle(selectedGroup.name)
+        .navigationTitle(taskVM.group.name)
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
@@ -114,7 +118,7 @@ struct TodoListView: View {
                                 showAlert = true
                             } else {
                                 // Task 추가
-                                taskVM.addTask(groupId: selectedGroup.id, taskVM.createTask(groupId: selectedGroup.id, newTaskTitle))
+                                taskVM.addTask(taskVM.createTask(newTaskTitle))
                                 // done section view 적용
                                 // taskVM.reloadTasks(selectedGroupIndex)
                                 hideTextfield()
@@ -125,20 +129,20 @@ struct TodoListView: View {
                         .alert("You must type at least 1 letter.", isPresented: $showAlert) {}
                     } else {
                         // Important list의 경우, rename 불가
-                        if selectedGroupIndex != 0 {
+                        if taskVM.group.id != 1 {
                             Button {
                                 showFieldAlert = true
                             } label: {
                                 Text("Rename")
                             }
                             .alert("Enter a new name for the list.", isPresented: $showFieldAlert) {
-                                TextField(taskVM.groups[selectedGroupIndex].name, text: $newListName)
+                                TextField(taskVM.group.name, text: $newListName)
                                 Button("Confirm") {
                                     // 입력값이 아예 없거나 공백만 입력했을 경우 완료되지 않도록 처리
                                     if !newListName.trim().isEmpty {
-                                        taskVM.updateGroup(groupId: selectedGroup.id, newListName)
+                                        groupVM.updateGroup(group: taskVM.group, newListName)
                                         // 현재 화면에도 적용
-                                        selectedGroup.name = newListName
+                                        taskVM.group.name = newListName
                                     }
                                 }
                                 Button("Cancel", role: .cancel, action: {})

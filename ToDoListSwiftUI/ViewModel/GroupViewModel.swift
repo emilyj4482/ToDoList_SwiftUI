@@ -52,15 +52,15 @@ final class GroupViewModel: ObservableObject {
         }
         todoDic.removeValue(forKey: group)
     }
-    
-    // TODO: dictionary key 값 수정 방법 찾기
-    /*
-    func updateGroup(groupId: Int, _ name: String) {
-        if let index = groups.firstIndex(where: { $0.id == groupId }) {
+
+    func updateGroup(group: Group, _ name: String) {
+        if let index = groups.firstIndex(where: { $0.id == group.id }) {
             groups[index].update(name: name)
         }
+        todoDic[Group(id: group.id, name: name)] = todoDic[group]
+        todoDic.removeValue(forKey: group)
     }
-    */
+    
 }
 
 // 문자열 앞뒤 공백 삭제 메소드 정의

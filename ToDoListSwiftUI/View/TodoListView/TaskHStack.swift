@@ -9,10 +9,10 @@ import SwiftUI
 
 struct TaskHStack: View {
     
-    @EnvironmentObject var taskVM: OldTaskViewModel
+    @ObservedObject var taskVM: TaskViewModel
     @State var task: Task
     
-    @Binding var groupIndex: Int
+    // @Binding var groupIndex: Int
     
     var body: some View {
         HStack {
@@ -21,8 +21,6 @@ struct TaskHStack: View {
                 .onTapGesture {
                     task.isDone.toggle()
                     taskVM.updateTaskComplete(task)
-                    // taskVM.reloadTasks(groupIndex)
-                    print(taskVM.groups)
                 }
             Text(task.title)
             Spacer()
