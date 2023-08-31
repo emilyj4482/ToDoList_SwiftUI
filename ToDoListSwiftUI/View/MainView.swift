@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     
-    @StateObject var groupVM: GroupViewModel = GroupViewModel()
+    @StateObject var groupVM: TodoViewModel = TodoViewModel()
     
     @State private var showAddView: Bool = false
     
@@ -107,6 +107,6 @@ struct MainView: View {
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView(groupVM: GroupViewModel())
+        MainView(groupVM: TodoViewModel())
     }
 }

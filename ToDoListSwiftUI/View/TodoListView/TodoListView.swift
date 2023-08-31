@@ -14,7 +14,7 @@ struct TodoListView: View {
     // @State var selectedGroupIndex: Int
     
     @StateObject var taskVM: TaskViewModel
-    @EnvironmentObject var groupVM: GroupViewModel
+    @EnvironmentObject var groupVM: TodoViewModel
     
     
     /* add New Task Mode : Add a Task 버튼을 눌러 새로운 task를 입력하는 모드 */
