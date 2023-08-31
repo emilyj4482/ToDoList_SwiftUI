@@ -9,10 +9,14 @@ import SwiftUI
 
 @main
 struct ToDoListSwiftUIApp: App {
+    
+    @StateObject var vm: TodoViewModel = TodoViewModel()
+    
     var body: some Scene {
         WindowGroup {
             MainView()
                 .tint(.pink)
+                .environmentObject(vm)
         }
     }
 }

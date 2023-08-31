@@ -7,9 +7,8 @@
 
 import Foundation
 
-// 할 일 Object
 struct Task: Identifiable, Codable, Hashable {
-    let id: Int
+    var id: UUID = UUID()
     let groupId: Int
     var title: String
     var isDone: Bool
@@ -19,16 +18,5 @@ struct Task: Identifiable, Codable, Hashable {
         self.title = title
         self.isDone = isDone
         self.isImportant = isImportant
-    }
-}
-
-// 할 일 그룹 Object
-struct Group: Identifiable, Codable, Hashable {
-    let id: Int
-    var name: String
-    var tasks: [Task]
-    
-    mutating func update(name: String) {
-        self.name = name
     }
 }
