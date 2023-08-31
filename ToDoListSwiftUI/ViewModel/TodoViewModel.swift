@@ -1,5 +1,5 @@
 //
-//  GroupViewModel.swift
+//  TodoViewModel.swift
 //  ToDoListSwiftUI
 //
 //  Created by EMILY on 2023/08/29.
