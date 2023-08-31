@@ -18,13 +18,6 @@ final class TodoViewModel: ObservableObject {
         Group(id: 1, name: "Important", tasks: [])
     ]
     
-    // 선택된 group 저장용 프로퍼티
-    @Published var group: Group
-    
-    init(group: Group) {
-        self.group = group
-    }
-    
     func createGroup(_ groupName: String) -> Group {
         let nextId = lastGroupId + 1
         lastGroupId = nextId
@@ -46,28 +39,32 @@ final class TodoViewModel: ObservableObject {
     
     func addGroup(_ group: Group) {
         groups.append(group)
+        print(groups)
     }
     
     func deleteGroup(_ group: Group) {
         if let index = groups.firstIndex(where: { $0.id == group.id }) {
             groups.remove(at: index)
         }
+        print(groups)
     }
 
     func updateGroup(group: Group, _ name: String) {
         if let index = groups.firstIndex(where: { $0.id == group.id }) {
             groups[index].update(name: name)
         }
+        print(groups)
     }
     
-    func createTask(_ title: String) -> Task {
-        return Task(groupId: group.id, title: title.trim(), isDone: false, isImportant: false)
+    func createTask(groupId: Int, _ title: String) -> Task {
+        return Task(groupId: groupId, title: title.trim(), isDone: false, isImportant: false)
     }
     
-    func addTask(_ task: Task) {
-        if var group = groups.first(where: { $0.id == group.id }) {
-            group.tasks.append(task)
+    func addTask(groupId: Int, _ task: Task) {
+        if let index = groups.firstIndex(where: { $0.id == groupId }) {
+            groups[index].tasks.append(task)
         }
+        print(groups)
     }
     
     // important task인 경우 Important group과 task가 속한 group 양쪽에서 삭제 필요
@@ -76,11 +73,12 @@ final class TodoViewModel: ObservableObject {
             deleteSingleTask(groupId: 1, taskID: task.id)
         }
         deleteSingleTask(groupId: task.groupId, taskID: task.id)
+        print(groups)
     }
     
     private func deleteSingleTask(groupId: Int, taskID: UUID) {
-        if var group = groups.first(where: { $0.id == groupId }) {
-            group.tasks.removeAll(where: { $0.id == taskID })
+        if let index = groups.firstIndex(where: { $0.id == groupId }) {
+            groups[index].tasks.removeAll(where: { $0.id == taskID })
         }
     }
     
@@ -90,12 +88,13 @@ final class TodoViewModel: ObservableObject {
             updateSingleTask(groupId: 1, taskId: task.id, task: task)
         }
         updateSingleTask(groupId: task.groupId, taskId: task.id, task: task)
+        print(groups)
     }
     
     private func updateSingleTask(groupId: Int, taskId: UUID, task: Task) {
-        if var group = groups.first(where: { $0.id == groupId }),
-           let index = group.tasks.firstIndex(where: { $0.id == taskId }) {
-            group.tasks[index].update(title: task.title, isDone: task.isDone, isImportant: task.isImportant)
+        if let index1 = groups.firstIndex(where: { $0.id == groupId }),
+           let index2 = groups[index1].tasks.firstIndex(where: { $0.id == taskId }) {
+            groups[index1].tasks[index2].update(title: task.title, isDone: task.isDone, isImportant: task.isImportant)
         }
     }
     
@@ -104,11 +103,12 @@ final class TodoViewModel: ObservableObject {
         if task.isImportant {
             groups[0].tasks.append(task)
         } else {
-            if var group = groups.first(where: { $0.id == task.groupId }) {
-                group.tasks.removeAll(where: { $0.id == task.id })
+            if let index = groups[0].tasks.firstIndex(where: { $0.id == task.id }) {
+                groups[0].tasks.remove(at: index)
             }
         }
         updateSingleTask(groupId: task.groupId, taskId: task.id, task: task)
+        print(groups)
     }
 }
 

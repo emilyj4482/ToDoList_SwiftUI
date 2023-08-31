@@ -9,10 +9,8 @@ import SwiftUI
 
 struct TaskHStack: View {
     
-    @ObservedObject var taskVM: TaskViewModel
+    @EnvironmentObject var vm: TodoViewModel
     @State var task: Task
-    
-    // @Binding var groupIndex: Int
     
     var body: some View {
         HStack {
@@ -20,7 +18,7 @@ struct TaskHStack: View {
                 .foregroundColor(task.isDone ? .green : .red)
                 .onTapGesture {
                     task.isDone.toggle()
-                    taskVM.updateTaskComplete(task)
+                    vm.updateTaskComplete(task)
                 }
             Text(task.title)
             Spacer()
@@ -28,7 +26,7 @@ struct TaskHStack: View {
                 .foregroundColor(.yellow)
                 .onTapGesture {
                     task.isImportant.toggle()
-                    taskVM.updateImportant(task)
+                    vm.updateImportant(task)
                 }
         }
         .padding([.top, .bottom], 5)

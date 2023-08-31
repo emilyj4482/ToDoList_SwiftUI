@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MainView: View {
     
-    @StateObject var groupVM: TodoViewModel = TodoViewModel()
+    @EnvironmentObject var vm: TodoViewModel
     
     @State private var showAddView: Bool = false
     
@@ -20,20 +20,17 @@ struct MainView: View {
     @State private var itemToDelete: Group? = nil
     
     var body: some View {
-        
-        @State var groups: [Group] = groupVM.todoDic.keys.sorted(by: { $0.id < $1.id })
-        
         NavigationStack {
             VStack {
                 List {
-                    ForEach(groups) { group in
+                    ForEach(vm.groups) { group in
                         NavigationLink(value: group) {
                             HStack {
                                 Image(systemName: group.id == 1 ? "star.fill" : "checklist.checked")
                                 Text(group.name)
                                 Spacer()
                             
-                                Text("\(groupVM.todoDic[group]?.count ?? 0)")
+                                Text("\(group.tasks.count)")
                                     .font(.system(size: 10))
                                     .foregroundColor(.gray)
                               
@@ -58,7 +55,11 @@ struct MainView: View {
                 .confirmationDialog("Are you sure deleting the list?", isPresented: $showActionSheet, titleVisibility: .visible) {
                     Button("Delete", role: .destructive) {
                         if let item = itemToDelete {
-                            groupVM.deleteGroup(item)
+                            // 삭제 대상 group이 important task를 포함하고 있을 때, group에 속했던 important task들이 Important group에서도 삭제되어야 한다.
+                            if item.tasks.contains(where: { $0.isImportant }) {
+                                vm.groups[0].tasks.removeAll(where: { $0.groupId == item.id && $0.isImportant })
+                            }
+                            vm.deleteGroup(item)
                         }
                         itemToDelete = nil
                     }
@@ -69,7 +70,7 @@ struct MainView: View {
                 .listStyle(PlainListStyle())
                 
                 Text(
-                    groupVM.groups.count < 3 ? "You have \(groupVM.groups.count - 1) custom list." : "You have \(groupVM.groups.count - 1) custom lists."
+                    vm.groups.count < 3 ? "You have \(vm.groups.count - 1) custom list." : "You have \(vm.groups.count - 1) custom lists."
                 )
                 .font(.system(size: 13))
                 .foregroundColor(.pink)
@@ -95,18 +96,15 @@ struct MainView: View {
                     AddNewListView()
                 }
             }
-            
             .navigationDestination(for: Group.self, destination: { group in
-                TodoListView(taskVM: TaskViewModel(group: group, tasks: groupVM.todoDic[group] ?? [], todoDic: $groupVM.todoDic))
+                TodoListView(group: group)
             })
-            
         }
-        .environmentObject(groupVM)
     }
 }
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView(groupVM: TodoViewModel())
+        MainView()
     }
 }
