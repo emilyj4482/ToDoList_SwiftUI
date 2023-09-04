@@ -64,10 +64,6 @@ struct TodoListView: View {
                 }
             }
             .listStyle(.plain)
-            // 화면을 tap 하면 textfield 영역 숨김
-            .onTapGesture {
-                hideTextfield()
-            }
             
             // Important list의 경우, star button을 통해서만 task를 추가할 수 있도록 구현 >> Add a Task 기능 비활성화
             if group.id != 1 {
@@ -81,8 +77,22 @@ struct TodoListView: View {
                                 hideTextfield()
                             }
                         Spacer()
-                        Image(systemName: "star")
-                            .foregroundColor(.yellow)
+
+                        Button {
+                            // textfield 입력값이 공백인 경우 입력모드를 종료하지 않고 alert 표시
+                            if newTaskTitle.trim().isEmpty {
+                                showAlert = true
+                            } else {
+                                // Task 추가
+                                vm.addTask(groupId: group.id, vm.createTask(groupId: group.id, newTaskTitle))
+                                // done section view 적용
+                                // taskVM.reloadTasks(selectedGroupIndex)
+                                hideTextfield()
+                            }
+                        } label: {
+                            Text("Done")
+                        }
+                        .alert("You must type at least 1 letter.", isPresented: $showAlert) {}
                     }
                     .padding(20)
                 } else if showFieldAlert {
@@ -109,20 +119,10 @@ struct TodoListView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     if addNewTaskMode {
                         Button {
-                            // textfield 입력값이 공백인 경우 입력모드를 종료하지 않고 alert 표시
-                            if newTaskTitle.trim().isEmpty {
-                                showAlert = true
-                            } else {
-                                // Task 추가
-                                vm.addTask(groupId: group.id, vm.createTask(groupId: group.id, newTaskTitle))
-                                // done section view 적용
-                                // taskVM.reloadTasks(selectedGroupIndex)
-                                hideTextfield()
-                            }
+                            hideTextfield()
                         } label: {
-                            Text("Done")
+                            Text("Cancel")
                         }
-                        .alert("You must type at least 1 letter.", isPresented: $showAlert) {}
                     } else {
                         // Important list의 경우, rename 불가
                         if group.id != 1 {
