@@ -14,19 +14,19 @@ struct TodoListView: View {
     // main view에서 선택되어 넘어 온 group
     @State var group: Group
     
+    // group name 수정 textfield alert 변수
+    @State var showFieldAlert: Bool = false
+    @State var newGroupName: String = ""
+    
     /* add New Task Mode : Add a Task 버튼을 눌러 새로운 task를 입력하는 모드 */
     // Add a Task btn tap(addNewTaskMode ON) : 1) Add a Task Button hidden 2) TaskField show 3) Done Button show
-    // on Tap Gestrue(addNewTaskMode OFF) : 1) TaskField hidden 2) Add a Task Button show 3) Done Button hidden
+    // Cancel btn tap(addNewTaskMode OFF) : 1) TaskField hidden 2) Add a Task Button show 3) Done Button hidden
     @State var addNewTaskMode: Bool = false
     @FocusState var taskFieldInFocus: Bool
     @State var newTaskTitle: String = ""
     
     // task 추가 시 입력값 없을 때 alert 변수
     @State var showAlert: Bool = false
-    
-    // task 수정 textfield alert 변수
-    @State var showFieldAlert: Bool = false
-    @State var newListName: String = ""
     
     var body: some View {
         VStack {
@@ -49,7 +49,7 @@ struct TodoListView: View {
                     TaskHStack(task: task)
                         .swipeActions(allowsFullSwipe: false) {
                             Button {
-                                print("swiped")
+                                vm.deleteTaskComplete(task)
                             } label: {
                                 Image(systemName: "trash")
                             }
@@ -132,13 +132,13 @@ struct TodoListView: View {
                                 Text("Rename")
                             }
                             .alert("Enter a new name for the list.", isPresented: $showFieldAlert) {
-                                TextField(group.name, text: $newListName)
+                                TextField(group.name, text: $newGroupName)
                                 Button("Confirm") {
                                     // 입력값이 아예 없거나 공백만 입력했을 경우 완료되지 않도록 처리
-                                    if !newListName.trim().isEmpty {
-                                        vm.updateGroup(group: group, newListName)
+                                    if !newGroupName.trim().isEmpty {
+                                        vm.updateGroup(group: group, newGroupName)
                                         // 현재 화면에도 적용
-                                        group.name = newListName
+                                        group.name = newGroupName
                                     }
                                 }
                                 Button("Cancel", role: .cancel, action: {})

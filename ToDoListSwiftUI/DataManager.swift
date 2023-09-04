@@ -28,7 +28,7 @@ class DataManager {
         if !fm.fileExists(atPath: path) {
             do {
                 try fm.createDirectory(atPath: path, withIntermediateDirectories: true)
-                print("TodoListApp Directory CREATED")
+                print("TodoListApp Directory CREATED >>> \(path)")
             } catch {
                 print("ERROR Creating Directory >>> \(error)")
             }
