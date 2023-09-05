@@ -21,6 +21,9 @@ struct TaskEditView: View {
     @FocusState var focused: Bool
     @State var taskTitle: String = ""
     @Binding var taskToEdit: Task?
+    
+    // textfield 입력값 없을 때 alert 호출
+    @State var showAlert: Bool = false
         
     var body: some View {
         HStack {
@@ -33,17 +36,21 @@ struct TaskEditView: View {
                 }
             Spacer()
             Button {
-                if isCreating {
+                if taskTitle.trim().isEmpty {
+                    showAlert = true
+                } else if isCreating && !taskTitle.trim().isEmpty {
                     vm.addTask(groupId: groupId, vm.createTask(groupId: groupId, taskTitle))
+                    dismiss()
                 } else {
                     guard var task = taskToEdit else { return }
                     task.title = taskTitle
                     vm.updateTaskComplete(task)
+                    dismiss()
                 }
-                dismiss()
             } label: {
                 Text("Done")
             }
+            .alert("There must be at least 1 letter typed.", isPresented: $showAlert) {}
         }
         .padding(20)
         .frame(height: 50)
