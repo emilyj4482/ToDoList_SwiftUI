@@ -64,7 +64,27 @@ struct TodoListView: View {
         .navigationTitle(group.name)
         .navigationBarTitleDisplayMode(.large)
         .toolbar {
-            
+            ToolbarItem(placement: .navigationBarTrailing) {
+                // Important list는 rename 불가
+                if group.id != 1{
+                    Button {
+                        showFieldAlert = true
+                    } label: {
+                        Text("Rename")
+                    }
+                    .alert("Enter a new name for the list.", isPresented: $showFieldAlert) {
+                        TextField(group.name, text: $newGroupName)
+                        Button("Confirm") {
+                            if !newGroupName.trim().isEmpty {
+                                vm.updateGroup(group: group, newGroupName)
+                                // 현재 화면 navigation title에도 적용
+                                group.name = newGroupName
+                            }
+                        }
+                        Button("Cancel", role: .cancel, action: {})
+                    }
+                }
+            }
         }
         .sheet(isPresented: $showCreate) {
             NavigationStack {
