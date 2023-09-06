@@ -30,5 +30,13 @@ struct TaskHStack: View {
                 }
         }
         .padding([.top, .bottom], 5)
+        .onReceive(vm.$taskUpdated) { taskUpdated in
+            guard let taskUpdated = taskUpdated else { return }
+            task = taskUpdated
+        }
+    }
+    
+    func reload() {
+        
     }
 }

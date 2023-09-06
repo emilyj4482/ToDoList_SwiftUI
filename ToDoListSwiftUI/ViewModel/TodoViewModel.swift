@@ -18,6 +18,9 @@ final class TodoViewModel: ObservableObject {
         Group(id: 1, name: "Important", tasks: [])
     ]
     
+    // task update publisher
+    @Published var taskUpdated: Task?
+    
     func createGroup(_ groupName: String) -> Group {
         let nextId = lastGroupId + 1
         lastGroupId = nextId
