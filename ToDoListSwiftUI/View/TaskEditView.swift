@@ -45,6 +45,8 @@ struct TaskEditView: View {
                     guard var task = taskToEdit else { return }
                     task.title = taskTitle
                     vm.updateTaskComplete(task)
+                    // view update를 위한 publishing
+                    vm.taskUpdated = task
                     dismiss()
                 }
             } label: {
