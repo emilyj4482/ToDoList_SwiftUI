@@ -45,6 +45,7 @@ struct TaskEditView: View {
                     guard var task = taskToEdit else { return }
                     task.title = taskTitle
                     vm.updateTaskComplete(task)
+                    NotificationCenter.default.post(name: .taskEdited, object: task)
                     dismiss()
                 }
             } label: {
@@ -62,4 +63,8 @@ struct TaskEditView: View {
             }
         }
     }
+}
+
+extension Notification.Name {
+    static let taskEdited = Notification.Name("taskEdited")
 }

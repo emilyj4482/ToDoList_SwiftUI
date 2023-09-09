@@ -26,7 +26,7 @@ struct TodoListView: View {
         VStack {
             List {
                 ForEach(vm.groups.first(where: { $0.id == group.id })?.tasks ?? []) { task in
-                    TaskHStack(task: task)
+                    TaskHStack(task: task, taskId: task.id)
                         .swipeActions(allowsFullSwipe: false) {
                             Button {
                                 vm.deleteTaskComplete(task)
