@@ -11,6 +11,7 @@ struct TaskHStack: View {
     
     @EnvironmentObject var vm: TodoViewModel
     @State var task: Task
+    var taskId: UUID
     
     var body: some View {
         HStack {
@@ -30,13 +31,9 @@ struct TaskHStack: View {
                 }
         }
         .padding([.top, .bottom], 5)
-        .onReceive(vm.$taskUpdated) { taskUpdated in
-            guard let taskUpdated = taskUpdated else { return }
-            task = taskUpdated
+        .onReceive(NotificationCenter.default.publisher(for: .taskEdited)) { output in
+            guard let taskEdited = output.object as? Task, taskId == taskEdited.id else { return }
+            task.title = taskEdited.title
         }
-    }
-    
-    func reload() {
-        
     }
 }
