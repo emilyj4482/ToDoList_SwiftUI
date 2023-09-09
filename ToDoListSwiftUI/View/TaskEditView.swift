@@ -45,6 +45,7 @@ struct TaskEditView: View {
                     guard var task = taskToEdit else { return }
                     task.title = taskTitle
                     vm.updateTaskComplete(task)
+                    // view update를 위한 noti
                     NotificationCenter.default.post(name: .taskEdited, object: task)
                     dismiss()
                 }
