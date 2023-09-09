@@ -12,7 +12,6 @@ final class TodoViewModel: ObservableObject {
     // disk에 app data를 json 파일로 저장해주는 data manager
     private let dm = DataManager.instance
     
-    
     // Group.id 저장용 프로퍼티
     private var lastGroupId: Int = 1
     // Group 이름 중복 쵯수 저장용 딕셔너리 [Group 이름: 중복 횟수]
