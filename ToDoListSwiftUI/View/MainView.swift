@@ -100,5 +100,9 @@ struct MainView: View {
                 TodoListView(group: group)
             })
         }
+        .onAppear {
+            // disk에 저장돼있는 data 불러오기
+            vm.retrieveGroups()
+        }
     }
 }

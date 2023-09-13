@@ -8,15 +8,24 @@
 import Foundation
 
 final class TodoViewModel: ObservableObject {
+    
+    // disk에 app data를 json 파일로 저장해주는 data manager
+    private let dm = DataManager.instance
+    
     // Group.id 저장용 프로퍼티
     private var lastGroupId: Int = 1
     // Group 이름 중복 쵯수 저장용 딕셔너리 [Group 이름: 중복 횟수]
     private var noOverlap: [String: Int] = [:]
     
-    // Group Array
+    // Group Array : Important group은 고정값
+    // Array에 변동이 생길 때마다 disk에 저장 : didSet
     @Published var groups: [Group] = [
         Group(id: 1, name: "Important", tasks: [])
-    ]
+    ] {
+        didSet {
+            dm.saveData(groups)
+        }
+    }
     
     func createGroup(_ groupName: String) -> Group {
         let nextId = lastGroupId + 1
@@ -39,21 +48,18 @@ final class TodoViewModel: ObservableObject {
     
     func addGroup(_ group: Group) {
         groups.append(group)
-        print(groups)
     }
     
     func deleteGroup(_ group: Group) {
         if let index = groups.firstIndex(where: { $0.id == group.id }) {
             groups.remove(at: index)
         }
-        print(groups)
     }
 
     func updateGroup(group: Group, _ name: String) {
         if let index = groups.firstIndex(where: { $0.id == group.id }) {
             groups[index].update(name: name)
         }
-        print(groups)
     }
     
     func createTask(groupId: Int, _ title: String) -> Task {
@@ -64,7 +70,6 @@ final class TodoViewModel: ObservableObject {
         if let index = groups.firstIndex(where: { $0.id == groupId }) {
             groups[index].tasks.append(task)
         }
-        print(groups)
     }
     
     // important task인 경우 Important group과 task가 속한 group 양쪽에서 삭제 필요
@@ -73,7 +78,6 @@ final class TodoViewModel: ObservableObject {
             deleteSingleTask(groupId: 1, taskID: task.id)
         }
         deleteSingleTask(groupId: task.groupId, taskID: task.id)
-        print(groups)
     }
     
     private func deleteSingleTask(groupId: Int, taskID: UUID) {
@@ -88,7 +92,6 @@ final class TodoViewModel: ObservableObject {
             updateSingleTask(groupId: 1, taskId: task.id, task: task)
         }
         updateSingleTask(groupId: task.groupId, taskId: task.id, task: task)
-        print(groups)
     }
     
     private func updateSingleTask(groupId: Int, taskId: UUID, task: Task) {
@@ -108,7 +111,14 @@ final class TodoViewModel: ObservableObject {
             }
         }
         updateSingleTask(groupId: task.groupId, taskId: task.id, task: task)
-        print(groups)
+    }
+    
+    // disk에서 저장된 data를 불러와 groups 및 lastGroupId 값에 적용
+    func retrieveGroups() {
+        groups = dm.getData()
+        
+        let lastId = groups.last?.id
+        lastGroupId = lastId ?? 1
     }
 }
 
