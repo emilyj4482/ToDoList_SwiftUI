@@ -17,8 +17,6 @@ final class TodoViewModel: ObservableObject {
     
     // Group.id 저장용 프로퍼티
     private var lastGroupId: Int = 1
-    // Group 이름 중복 쵯수 저장용 딕셔너리 [Group 이름: 중복 횟수]
-    private var noOverlap: [String: Int] = [:]
     
     // Group Array : Important group은 고정값
     // Array에 변동이 생길 때마다 disk에 저장 : didSet
@@ -34,19 +32,7 @@ final class TodoViewModel: ObservableObject {
         let nextId = lastGroupId + 1
         lastGroupId = nextId
         
-        // Group 이름 중복 검사
-        if groups.firstIndex(where: { $0.name == groupName.trim() }) != nil && noOverlap[groupName] == nil {
-            noOverlap[groupName] = 1
-            if let count = noOverlap[groupName] {
-                return Group(id: nextId, name: "\(groupName.trim()) (\(count))", tasks: [])
-            }
-        } else if groups.firstIndex(where: { $0.name == groupName.trim() }) != nil && noOverlap[groupName] != nil {
-            noOverlap[groupName]! += 1
-            if let count = noOverlap[groupName] {
-                return Group(id: nextId, name: "\(groupName.trim()) (\(count))", tasks: [])
-            }
-        }
-        return Group(id: nextId, name: groupName.trim(), tasks: [])
+        return Group(id: nextId, name: groupName, tasks: [])
     }
     
     func addGroup(_ group: Group) {
