@@ -9,6 +9,9 @@ import Foundation
 
 final class TodoViewModel: ObservableObject {
     
+    // singleton
+    static let shared = TodoViewModel()
+    
     // disk에 app data를 json 파일로 저장해주는 data manager
     private let dm = DataManager.instance
     

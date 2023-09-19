@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct ToDoListSwiftUIApp: App {
     
-    @StateObject var vm: TodoViewModel = TodoViewModel()
+    @StateObject var vm = TodoViewModel.shared
     
     var body: some Scene {
         WindowGroup {
