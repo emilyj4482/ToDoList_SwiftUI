@@ -27,8 +27,8 @@ struct TaskEditView: View {
         
     var body: some View {
         HStack {
-            Image(systemName: "circle")
-                .foregroundColor(.red)
+            Image(systemName: isCreating == false && taskToEdit?.isDone == true ? "checkmark.circle" : "circle")
+                .foregroundColor(isCreating == false && taskToEdit?.isDone == true ? .green : .red)
             TextField("Enter a task.", text: $taskTitle)
                 .focused($focused)
                 .onSubmit {
