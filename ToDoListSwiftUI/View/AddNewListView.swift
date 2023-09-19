@@ -35,7 +35,7 @@ struct AddNewListView: View {
             }
             ToolbarItem(placement: .navigationBarTrailing) {
                 Button {
-                    vm.addGroup(vm.createGroup(getListName(listName)))
+                    vm.addGroup(vm.createGroup(examListName(getListName(listName))))
                     dismiss()
                 } label: {
                     Text("Done")
@@ -54,5 +54,21 @@ struct AddNewListView: View {
             return "Untitled list"
         }
         return listName.trim()
+    }
+    
+    // group name 중복검사
+    func examListName(_ text: String) -> String {
+        let list = vm.groups.map { group in
+            group.name
+        }
+        
+        var count = 1
+        var listName = text
+        while list.contains(listName) {
+            listName = "\(text) (\(count))"
+            count += 1
+        }
+        
+        return listName
     }
 }
