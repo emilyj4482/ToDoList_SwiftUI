@@ -1,6 +1,6 @@
 //
 //  Task.swift
-//  ToDoListSwiftUI
+//  ToDoList_SwiftUI
 //
 //  Created by EMILY on 2023/05/12.
 //
@@ -9,7 +9,7 @@ import Foundation
 
 struct Task: Identifiable, Codable, Hashable {
     var id: UUID = UUID()
-    let groupId: Int
+    let categoryID: Int
     var title: String
     var isDone: Bool
     var isImportant: Bool
