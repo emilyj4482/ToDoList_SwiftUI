@@ -9,10 +9,12 @@ import SwiftUI
 
 struct AddCategoryView: View {
     
-    @StateObject var viewModel: AddCategoryViewModel
+    @StateObject var store: AddCategoryStore
+    private let repository: TodoRepository
     
     init(repository: TodoRepository) {
-        _viewModel = StateObject(wrappedValue: AddCategoryViewModel(repository: repository))
+        self.repository = repository
+        _store = StateObject(wrappedValue: AddCategoryStore(repository: repository))
     }
     
     var body: some View {

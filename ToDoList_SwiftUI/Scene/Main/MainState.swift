@@ -8,6 +8,10 @@
 import Foundation
 
 struct MainState {
-    var groups: [Category] = []
-    var errorMessage: String?
+    var categories: [Category] = []
+    var error: DataError?
+    
+    var hasError: Bool {
+        error != nil
+    }
 }

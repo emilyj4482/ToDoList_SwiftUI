@@ -9,7 +9,7 @@ import Foundation
 
 struct Task: Identifiable, Codable, Hashable {
     var id: UUID = UUID()
-    let categoryID: Int
+    let categoryID: UUID
     var title: String
     var isDone: Bool
     var isImportant: Bool

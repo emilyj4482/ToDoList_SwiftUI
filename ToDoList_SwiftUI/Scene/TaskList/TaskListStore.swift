@@ -7,12 +7,12 @@
 
 import Foundation
 
-final class TaskListViewModel: ObservableObject {
+final class TaskListStore: ObservableObject {
     private let repository: TodoRepository
-    private let categoryID: Int
+    private let category: Category
     
-    init(repository: TodoRepository, categoryID: Int) {
+    init(repository: TodoRepository, category: Category) {
         self.repository = repository
-        self.categoryID = categoryID
+        self.category = category
     }
 }

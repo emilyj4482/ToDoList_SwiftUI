@@ -9,11 +9,12 @@ import SwiftUI
 
 struct TaskListView: View {
     
-    @StateObject var viewModel: TaskListViewModel
+    @StateObject var store: TaskListStore
     private let repository: TodoRepository
     
-    init(repository: TodoRepository, categoryID: Int) {
-        _viewModel = StateObject(wrappedValue: TaskListViewModel(repository: repository, categoryID: categoryID))
+    init(repository: TodoRepository, category: Category) {
+        self.repository = repository
+        _store = StateObject(wrappedValue: TaskListStore(repository: repository, category: category))
     }
     
     var body: some View {

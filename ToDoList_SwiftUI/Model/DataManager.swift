@@ -46,36 +46,33 @@ final class DataManager {
         return fileURL
     }
     
-    func getData<T: Decodable>() -> [T] {
-        guard
-            let url = getJSONFileURL(),
-            let data = try? Data(contentsOf: url)
-        else {
-            return []
+    func loadData<T: Decodable>() throws -> [T] {
+        guard let url = getJSONFileURL() else {
+            throw DataError.invalidURL
         }
         
-        let decoder = JSONDecoder()
+        guard let data = try? Data(contentsOf: url) else {
+            throw DataError.fileNotFound
+        }
         
         do {
-            let decodedData = try decoder.decode([T].self, from: data)
+            let decodedData = try JSONDecoder().decode([T].self, from: data)
             return decodedData
         } catch {
-            print("[DataManager] Failed to decode data: \(error.localizedDescription)")
-            return []
+            throw DataError.decodingFailed(error)
         }
     }
     
-    func saveData<T: Encodable>(_ data: [T]) {
-        guard let url = getJSONFileURL() else { return }
-        
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
+    func saveData<T: Encodable>(_ data: [T]) throws {
+        guard let url = getJSONFileURL() else {
+            throw DataError.invalidURL
+        }
         
         do {
-            let encodedData = try encoder.encode(data)
+            let encodedData = try JSONEncoder().encode(data)
             try encodedData.write(to: url, options: .atomic)    // 기존 파일이 있으면 덮어씀
         } catch {
-            print("[DataManager] Failed to write data: \(error.localizedDescription)")
+            throw DataError.saveFailed(error)
         }
     }
 }

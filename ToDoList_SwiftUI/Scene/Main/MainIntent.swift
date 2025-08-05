@@ -8,6 +8,5 @@
 import Foundation
 
 enum MainIntent {
-    case loadGroups
-    case deleteGroup(Int)
+    case deleteCategory(id: UUID)
 }

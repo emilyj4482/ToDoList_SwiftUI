@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class AddCategoryViewModel: ObservableObject {
+final class AddCategoryStore: ObservableObject {
     private let repository: TodoRepository
     
     init(repository: TodoRepository) {
