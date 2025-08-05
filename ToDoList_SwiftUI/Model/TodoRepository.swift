@@ -25,7 +25,7 @@ final class TodoRepository {
     // 변경사항이 발생할 때마다 데이터를 저장
     private func save() {
         $categories
-            .dropFirst()
+            .dropFirst()    // 기본값인 빈 배열이 이벤트로 방출돼도 무시
             .sink { [weak self] categories in
                 do {
                     try self?.dataManager.saveData(categories)

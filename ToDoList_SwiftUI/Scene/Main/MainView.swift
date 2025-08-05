@@ -58,6 +58,15 @@ struct MainView: View {
             .padding(.horizontal, 20)
             .padding(.bottom, 10)
         }
+        .alert("Error", isPresented: .constant(store.state.hasError), actions: {
+            Button("OK") {
+                if let error = store.state.error {
+                    print(error.errorDescription)
+                }
+            }
+        }, message: {
+            Text("Data could not be loaded. Please try again later.")
+        })
         .navigationTitle("ToDoList")
         .navigationDestination(for: Category.self) { category in
             TaskListView(repository: repository, category: category)
