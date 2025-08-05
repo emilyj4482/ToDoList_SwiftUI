@@ -17,6 +17,8 @@ struct MainView: View {
         _store = StateObject(wrappedValue: MainStore(repository: repository))
     }
     
+    @State private var showAddView: Bool = false
+    
     var body: some View {
         VStack {
             // Categories List
@@ -46,7 +48,7 @@ struct MainView: View {
                 
                 // + New Category Button
                 Button {
-                    
+                    showAddView.toggle()
                 } label: {
                     HStack {
                         Image(systemName: "plus")
@@ -66,6 +68,11 @@ struct MainView: View {
             }
         }, message: {
             Text("Data could not be loaded. Please try again later.")
+        })
+        .sheet(isPresented: $showAddView, content: {
+            NavigationStack {
+                AddCategoryView(repository: repository)
+            }
         })
         .navigationTitle("ToDoList")
         .navigationDestination(for: Category.self) { category in

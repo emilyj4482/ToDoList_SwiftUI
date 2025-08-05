@@ -40,6 +40,7 @@ final class TodoRepository {
             .store(in: &cancellables)
     }
     
+    // TODO: handle file not found
     private func loadCategories() {
         do {
             let loadedCategories: [Category] = try dataManager.loadData()
@@ -51,5 +52,31 @@ final class TodoRepository {
         } catch {
             self.error = DataError.etc(error)
         }
+    }
+    
+    func createCategory(with input: String) {
+        // name 검사 후 category 생성하여 source에 추가
+        let processedName = processCategoryName(input)
+        let category = Category(name: processedName, tasks: [])
+        categories.append(category)
+    }
+    
+    private func processCategoryName(_ input: String) -> String {
+        // 1. 공백 제거
+        let trimmedInput = input.trim
+        // 2. 완전 공백일 시 default name 부여
+        let baseName = trimmedInput.isEmpty ? "Untitled Category" : trimmedInput
+        // 3. 기존 이름들
+        let existingNames = categories.compactMap { $0.name }
+        // 4. 중복 검사 : 중복 시 (n) 붙이고 반환
+        var count = 1
+        var finalName = baseName
+        
+        while existingNames.contains(finalName) {
+            finalName = "\(baseName) (\(count))"
+            count += 1
+        }
+        
+        return finalName
     }
 }
