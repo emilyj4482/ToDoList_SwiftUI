@@ -21,5 +21,6 @@ struct TaskListView: View {
         VStack {
             
         }
+        .navigationTitle(store.state.category.name)
     }
 }

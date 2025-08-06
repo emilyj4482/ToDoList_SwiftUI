@@ -9,10 +9,22 @@ import Foundation
 
 final class TaskListStore: ObservableObject {
     private let repository: TodoRepository
-    private let category: Category
     
     init(repository: TodoRepository, category: Category) {
         self.repository = repository
-        self.category = category
+        self.state = TaskListState(category: category)
+    }
+    
+    @Published private(set) var state: TaskListState
+    
+    func send(_ intent: TaskListIntent) {
+        reduce(intent)
+    }
+    
+    private func reduce(_ intent: TaskListIntent) {
+        switch intent {
+        case .renameCategory(let input):
+            print(input)
+        }
     }
 }
