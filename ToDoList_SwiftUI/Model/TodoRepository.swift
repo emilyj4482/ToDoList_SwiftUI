@@ -92,4 +92,12 @@ final class TodoRepository {
         
         return finalName
     }
+    
+    func deleteCategory(with id: UUID) {
+        if var importantCategory = categories.first(where: { $0.name == "Important" }) {
+            importantCategory.tasks.removeAll { $0.categoryID == id }
+        }
+        categories.removeAll { $0.id == id }
+        save()
+    }
 }

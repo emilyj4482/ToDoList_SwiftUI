@@ -18,6 +18,8 @@ struct MainView: View {
     }
     
     @State private var showAddView: Bool = false
+    @State private var showActionSheet: Bool = false
+    @State private var categoryIDToDelete: UUID?
     
     var body: some View {
         VStack {
@@ -34,10 +36,33 @@ struct MainView: View {
                                 .foregroundStyle(.gray)
                         }
                         .padding(.vertical, 5)
+                        .swipeActions(allowsFullSwipe: false) {
+                            // Important category는 삭제 불가
+                            if category.name != "Important" {
+                                Button {
+                                    categoryIDToDelete = category.id
+                                    showActionSheet.toggle()
+                                } label: {
+                                    Image(systemName: "trash")
+                                }
+                            }
+                        }
                     }
                 }
             }
             .listStyle(.plain)
+            .confirmationDialog("Are you sure you want to delete this category?", isPresented: $showActionSheet, titleVisibility: .visible) {
+                Button("Yes", role: .destructive) {
+                    if let categoryID = categoryIDToDelete {
+                        store.send(.deleteCategory(id: categoryID))
+                    }
+                    categoryIDToDelete = nil
+                }
+                
+                Button("Cancel", role: .cancel) {
+                    categoryIDToDelete = nil
+                }
+            }
             
             VStack(spacing: 15) {
                 // Category count Label

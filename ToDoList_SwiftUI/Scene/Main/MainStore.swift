@@ -43,7 +43,7 @@ final class MainStore: ObservableObject {
     private func reduce(_ intent: MainIntent) {
         switch intent {
         case .deleteCategory(let id):
-            print(id)
+            repository.deleteCategory(with: id)
         }
     }
 }
