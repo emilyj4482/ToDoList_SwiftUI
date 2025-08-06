@@ -6,13 +6,10 @@
 //  Refactored by EMILY on 2025/08/05.
 
 import Foundation
-import Combine
 
 final class TodoRepository {
     
     private let dataManager = DataManager()
-    
-    private var cancellables = Set<AnyCancellable>()
     
     @Published private(set) var categories: [Category] = []
     @Published private(set) var error: DataError?
