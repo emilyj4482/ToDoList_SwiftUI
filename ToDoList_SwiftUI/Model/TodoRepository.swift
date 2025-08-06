@@ -19,25 +19,20 @@ final class TodoRepository {
     
     init() {
         loadCategories()
-        save()
     }
     
-    // 변경사항이 발생할 때마다 데이터를 저장
     private func save() {
-        $categories
-            .dropFirst()    // 기본값인 빈 배열이 이벤트로 방출돼도 무시
-            .sink { [weak self] categories in
-                do {
-                    try self?.dataManager.saveData(categories)
-                    self?.error = nil
-                    print("[TodoRepository] data change saved.")
-                } catch let dataError as DataError {
-                    self?.error = dataError
-                } catch {
-                    self?.error = DataError.etc(error)
-                }
-            }
-            .store(in: &cancellables)
+        do {
+            try dataManager.saveData(categories)
+            self.error = nil
+            print("[TodoRepository] categories are saved successfully.")
+        } catch let dataError as DataError {
+            self.error = dataError
+            print("[TodoRepository] Save failed: \(dataError)")
+        } catch {
+            self.error = DataError.etc(error)
+            print("[TodoRepository] Save failed: \(error)")
+        }
     }
     
     // TODO: handle file not found
@@ -46,11 +41,28 @@ final class TodoRepository {
             let loadedCategories: [Category] = try dataManager.loadData()
             self.categories = loadedCategories.isEmpty ? [Category.defaultImportantCategory] : loadedCategories
             self.error = nil
+            print("[TodoRepository] \(loadedCategories.count) categories loaded successfully.")
+        } catch DataError.fileNotFound {
+            // 앱 최초 실행 시 json file이 없는 것이 정상이므로 error 아닌 것으로 취급
+            let isFirstLaunch = !UserDefaults.standard.bool(forKey: Keys.userDefaultsKeyIfLaunchedBefore)
+            
+            if isFirstLaunch {
+                UserDefaults.standard.set(true, forKey: Keys.userDefaultsKeyIfLaunchedBefore)
+                self.categories = [Category.defaultImportantCategory]
+                print("[TodoRepository] First launch >>> default category is created.")
+                self.error = nil
+                save()
+            } else {
+                self.error = DataError.fileNotFound
+                self.categories = [Category.defaultImportantCategory]
+            }
+            
         } catch let dataError as DataError {
             self.error = dataError
             self.categories = [Category.defaultImportantCategory]
         } catch {
             self.error = DataError.etc(error)
+            self.categories = [Category.defaultImportantCategory]
         }
     }
     
@@ -59,6 +71,7 @@ final class TodoRepository {
         let processedName = processCategoryName(input)
         let category = Category(name: processedName, tasks: [])
         categories.append(category)
+        save()
     }
     
     private func processCategoryName(_ input: String) -> String {

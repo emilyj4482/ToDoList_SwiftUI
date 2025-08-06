@@ -51,11 +51,12 @@ final class DataManager {
             throw DataError.invalidURL
         }
         
-        guard let data = try? Data(contentsOf: url) else {
+        guard fileManager.fileExists(atPath: url.path(percentEncoded: false)) else {
             throw DataError.fileNotFound
         }
         
         do {
+            let data = try Data(contentsOf: url)
             let decodedData = try JSONDecoder().decode([T].self, from: data)
             return decodedData
         } catch {

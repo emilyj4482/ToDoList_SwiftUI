@@ -10,4 +10,5 @@ import Foundation
 struct Keys {
     static let dataDirectoryName = "ToDoListAppData"
     static let jsonFileName = "todo.json"
+    static let userDefaultsKeyIfLaunchedBefore = "hasLaunchedBefore"
 }
