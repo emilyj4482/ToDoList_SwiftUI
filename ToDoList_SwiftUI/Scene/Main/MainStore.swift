@@ -21,19 +21,15 @@ final class MainStore: ObservableObject {
     @Published private(set) var state = MainState()
     
     private func bind() {
-        repository.$categories
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] categories in
-                self?.state.categories = categories
-            }
-            .store(in: &cancellables)
-        
-        repository.$error
-            .receive(on: DispatchQueue.main)
-            .sink { [weak self] error in
-                self?.state.error = error
-            }
-            .store(in: &cancellables)
+        Publishers.CombineLatest(
+            repository.$categories,
+            repository.$error
+        )
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] categories, error in
+            self?.state = MainState(categories: categories, error: error)
+        }
+        .store(in: &cancellables)
     }
     
     func send(_ intent: MainIntent) {
