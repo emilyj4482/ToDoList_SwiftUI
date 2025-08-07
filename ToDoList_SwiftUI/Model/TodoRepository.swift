@@ -32,7 +32,6 @@ final class TodoRepository {
         }
     }
     
-    // TODO: handle file not found
     private func loadCategories() {
         do {
             let loadedCategories: [Category] = try dataManager.loadData()
@@ -90,11 +89,70 @@ final class TodoRepository {
         return finalName
     }
     
+    private func getImportantCategoryIndex() -> Int? {
+        return categories.firstIndex { $0.name == "Important" }
+    }
+    
     func deleteCategory(with id: UUID) {
-        if var importantCategory = categories.first(where: { $0.name == "Important" }) {
-            importantCategory.tasks.removeAll { $0.categoryID == id }
+        // important category가 갖고 있는 해당 카테고리 task 모두 삭제
+        if let importantCategoryIndex = getImportantCategoryIndex() {
+            categories[importantCategoryIndex].tasks.removeAll { $0.categoryID == id }
         }
         categories.removeAll { $0.id == id }
         save()
+    }
+    
+    func rename(category: Category, to input: String) {
+        let processedName = processCategoryName(input)
+        
+        guard let index = categories.firstIndex(of: category) else { return }
+        
+        categories[index].rename(to: processedName)
+        save()
+    }
+}
+
+extension TodoRepository {
+    func createTask(input: String, to category: Category) {
+        let task = Task(categoryID: category.id, title: input.trim)
+        
+        guard let index = categories.firstIndex(of: category) else { return }
+        
+        categories[index].tasks.append(task)
+        save()
+    }
+    
+    func toggleTaskDone(task: Task) {
+        guard let categoryIndex = categories.firstIndex(where: { $0.id == task.categoryID }),
+              let taskIndex = categories[categoryIndex].tasks.firstIndex(of: task) else { return }
+        
+        categories[categoryIndex].tasks[taskIndex].toggleDone()
+        
+        // important category에서도 toggle 적용
+        if task.isImportant,
+           let importantCategoryIndex = getImportantCategoryIndex(),
+           let taskIndex = categories[importantCategoryIndex].tasks.firstIndex(of: task) {
+            categories[importantCategoryIndex].tasks[taskIndex].toggleDone()
+        }
+        
+        save()
+    }
+    
+    func toggleTaskImportant(task: Task) {
+        guard let categoryIndex = categories.firstIndex(where: { $0.id == task.categoryID }),
+              let taskIndex = categories[categoryIndex].tasks.firstIndex(of: task),
+              let importantCategoryIndex = getImportantCategoryIndex()
+        else { return }
+        
+        categories[categoryIndex].tasks[taskIndex].toggleImportant()
+        
+        // important category에 추가/삭제
+        let updatedTask = categories[categoryIndex].tasks[taskIndex]
+        
+        if updatedTask.isImportant {
+            categories[importantCategoryIndex].tasks.append(updatedTask)
+        } else {
+            categories[importantCategoryIndex].tasks.removeAll { $0.id == updatedTask.id }
+        }
     }
 }

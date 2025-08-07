@@ -13,7 +13,7 @@ struct Category: Identifiable, Codable, Hashable {
     var name: String
     var tasks: [Task]
     
-    mutating func update(name: String) {
+    mutating func rename(to name: String) {
         self.name = name
     }
     

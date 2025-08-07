@@ -6,16 +6,35 @@
 //
 
 import Foundation
+import Combine
 
 final class TaskListStore: ObservableObject {
     private let repository: TodoRepository
     
+    private var cancellables = Set<AnyCancellable>()
+    
     init(repository: TodoRepository, category: Category) {
         self.repository = repository
         self.state = TaskListState(category: category)
+        
+        bind(with: category)
     }
     
     @Published private(set) var state: TaskListState
+    
+    private func bind(with category: Category) {
+        Publishers.CombineLatest(
+            repository.$categories.compactMap { categories in
+                categories.first { $0.id == category.id }
+            },
+            repository.$error
+        )
+        .receive(on: DispatchQueue.main)
+        .sink { [weak self] updatedCategory, error in
+            self?.state = TaskListState(category: updatedCategory, error: error)
+        }
+        .store(in: &cancellables)
+    }
     
     func send(_ intent: TaskListIntent) {
         reduce(intent)
@@ -24,7 +43,13 @@ final class TaskListStore: ObservableObject {
     private func reduce(_ intent: TaskListIntent) {
         switch intent {
         case .renameCategory(let input):
-            print(input)
+            repository.rename(category: state.category, to: input)
+        case .addTask(let input):
+            repository.createTask(input: input, to: state.category)
+        case .toggleTaskDone(let task):
+            repository.toggleTaskDone(task: task)
+        case .toggleTaskImportant(let task):
+            repository.toggleTaskImportant(task: task)
         }
     }
 }

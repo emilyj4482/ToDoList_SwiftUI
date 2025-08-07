@@ -11,12 +11,18 @@ struct Task: Identifiable, Codable, Hashable {
     var id: UUID = UUID()
     let categoryID: UUID
     var title: String
-    var isDone: Bool
-    var isImportant: Bool
+    var isDone: Bool = false
+    var isImportant: Bool = false
     
-    mutating func update(title: String, isDone: Bool, isImportant: Bool) {
+    mutating func retitle(to title: String) {
         self.title = title
-        self.isDone = isDone
-        self.isImportant = isImportant
+    }
+    
+    mutating func toggleDone() {
+        isDone.toggle()
+    }
+    
+    mutating func toggleImportant() {
+        isImportant.toggle()
     }
 }

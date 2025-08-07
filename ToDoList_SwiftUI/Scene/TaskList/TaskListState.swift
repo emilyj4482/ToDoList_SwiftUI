@@ -9,6 +9,11 @@ import Foundation
 
 struct TaskListState {
     var category: Category
+    
+    var isImportantCategory: Bool {
+        category.name == "Important"
+    }
+    
     var error: DataError?
     
     var hasError: Bool {
