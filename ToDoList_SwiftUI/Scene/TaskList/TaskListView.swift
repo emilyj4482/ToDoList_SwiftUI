@@ -19,8 +19,65 @@ struct TaskListView: View {
     
     var body: some View {
         VStack {
+            // Tasks List
+            List {
+                ForEach(store.state.category.tasks) { task in
+                    HStack {
+                        Button {
+                            store.send(.toggleTaskDone(task: task))
+                        } label: {
+                            TaskDoneToggleImage(isDone: task.isDone)
+                        }
+
+                        Text(task.title)
+                        
+                        Spacer()
+                        
+                        Button {
+                            store.send(.toggleTaskImportant(task: task))
+                        } label: {
+                            TaskImportantToggleImage(isImportant: task.isImportant)
+                        }
+
+                    }
+                    .padding(.vertical, 5)
+                }
+            }
+            .listStyle(.plain)
             
+            // Add a Task Button
+            if !store.state.isImportantCategory {
+                Button {
+                    // MARK: add a task 여기 아님 intent 수정 필요
+                } label: {
+                    HStack {
+                        Image(systemName: "plus")
+                        Text("Add a Task")
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 10)
+            }
         }
         .navigationTitle(store.state.category.name)
+    }
+}
+
+fileprivate struct TaskDoneToggleImage: View {
+    let isDone: Bool
+    
+    var body: some View {
+        Image(systemName: isDone ? "checkmark.circle" : "circle")
+            .foregroundStyle(isDone ? .green : .red)
+    }
+}
+
+fileprivate struct TaskImportantToggleImage: View {
+    let isImportant: Bool
+    
+    var body: some View {
+        Image(systemName: isImportant ? "star.fill" : "star")
+            .foregroundStyle(.yellow)
     }
 }
