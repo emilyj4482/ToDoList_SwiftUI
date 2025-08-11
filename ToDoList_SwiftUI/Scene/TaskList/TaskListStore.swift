@@ -44,8 +44,6 @@ final class TaskListStore: ObservableObject {
         switch intent {
         case .renameCategory(let input):
             repository.rename(category: state.category, to: input)
-        case .addTask(let input):
-            repository.createTask(input: input, to: state.category)
         case .toggleTaskDone(let task):
             repository.toggleTaskDone(task: task)
         case .toggleTaskImportant(let task):

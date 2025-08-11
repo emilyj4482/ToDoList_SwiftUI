@@ -17,6 +17,9 @@ struct TaskListView: View {
         _store = StateObject(wrappedValue: TaskListStore(repository: repository, category: category))
     }
     
+    @State private var showRenameAlert: Bool = false
+    @State private var textFieldInput: String = ""
+    
     var body: some View {
         VStack {
             // Tasks List
@@ -48,7 +51,7 @@ struct TaskListView: View {
             // Add a Task Button
             if !store.state.isImportantCategory {
                 Button {
-                    // MARK: add a task 여기 아님 intent 수정 필요
+                    
                 } label: {
                     HStack {
                         Image(systemName: "plus")
@@ -58,6 +61,26 @@ struct TaskListView: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
                 .padding(.horizontal, 20)
                 .padding(.bottom, 10)
+            }
+        }
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                if !store.state.isImportantCategory {
+                    Button {
+                        showRenameAlert.toggle()
+                    } label: {
+                        Text("Rename")
+                    }
+                    .alert("Enter a new name for the category", isPresented: $showRenameAlert) {
+                        TextField(store.state.category.name, text: $textFieldInput)
+                        Button("Confirm") {
+                            if !textFieldInput.trim.isEmpty {
+                                store.send(.renameCategory(input: textFieldInput))
+                            }
+                        }
+                        Button("Cancel", role: .cancel, action: {})
+                    }
+                }
             }
         }
         .navigationTitle(store.state.category.name)
