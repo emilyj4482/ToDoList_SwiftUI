@@ -20,6 +20,8 @@ struct TaskListView: View {
     @State private var showRenameAlert: Bool = false
     @State private var textFieldInput: String = ""
     
+    @State private var showEditView: Bool = false
+    
     var body: some View {
         VStack {
             // Tasks List
@@ -51,7 +53,7 @@ struct TaskListView: View {
             // Add a Task Button
             if !store.state.isImportantCategory {
                 Button {
-                    
+                    showEditView.toggle()
                 } label: {
                     HStack {
                         Image(systemName: "plus")
@@ -83,6 +85,12 @@ struct TaskListView: View {
                 }
             }
         }
+        .sheet(isPresented: $showEditView, content: {
+            NavigationStack {
+                TaskEditView(repository: repository)
+            }
+            .presentationDetents([.height(50)])
+        })
         .navigationTitle(store.state.category.name)
     }
 }
