@@ -14,6 +14,14 @@ struct TaskListState {
         category.name == "Important"
     }
     
+    var doneTasks: [Task] {
+        return category.tasks.filter({ $0.isDone })
+    }
+    
+    var undoneTasks: [Task] {
+        return category.tasks.filter({ !$0.isDone })
+    }
+    
     var taskToRetitle: Task?
     
     var error: DataError?

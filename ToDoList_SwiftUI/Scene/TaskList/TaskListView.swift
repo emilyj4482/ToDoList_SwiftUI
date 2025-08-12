@@ -27,41 +27,17 @@ struct TaskListView: View {
         VStack {
             // Tasks List
             List {
-                ForEach(store.state.category.tasks) { task in
-                    HStack {
-                        Button {
-                            store.send(.toggleTaskDone(task: task))
-                        } label: {
-                            TaskDoneToggleImage(isDone: task.isDone)
-                        }
-                        .buttonStyle(.plain)
-                        
-                        Text(task.title)
-                        
-                        Spacer()
-                        
-                        Button {
-                            store.send(.toggleTaskImportant(task: task))
-                        } label: {
-                            TaskImportantToggleImage(isImportant: task.isImportant)
-                        }
-                        .buttonStyle(.plain)
+                Section {
+                    ForEach(store.state.undoneTasks) { task in
+                        TaskRowView(task: task, store: store, showRetitleView: $showRetitleView)
                     }
-                    .padding(.vertical, 5)
-                    .swipeActions(allowsFullSwipe: false) {
-                        Button {
-                            store.send(.deleteTask(task: task))
-                        } label: {
-                            Image(systemName: "trash")
+                }
+                
+                if !store.state.doneTasks.isEmpty {
+                    Section("Completed") {
+                        ForEach(store.state.doneTasks) { task in
+                            TaskRowView(task: task, store: store, showRetitleView: $showRetitleView)
                         }
-                        
-                        Button {
-                            store.send(.sendTaskInfo(task: task))
-                            showRetitleView.toggle()
-                        } label: {
-                            Image(systemName: "pencil")
-                        }
-                        .tint(.cyan)
                     }
                 }
             }
@@ -117,6 +93,53 @@ struct TaskListView: View {
             .presentationDetents([.height(50)])
         })
         .navigationTitle(store.state.category.name)
+    }
+}
+
+fileprivate struct TaskRowView: View {
+    
+    let task: Task
+    let store: TaskListStore
+    @Binding var showRetitleView: Bool
+    
+    var body: some View {
+        HStack {
+            Button {
+                store.send(.toggleTaskDone(task: task))
+            } label: {
+                TaskDoneToggleImage(isDone: task.isDone)
+            }
+            .buttonStyle(.plain)
+            
+            Text(task.title)
+                .strikethrough(task.isDone)
+                .foregroundStyle(task.isDone ? .secondary: .primary)
+            
+            Spacer()
+            
+            Button {
+                store.send(.toggleTaskImportant(task: task))
+            } label: {
+                TaskImportantToggleImage(isImportant: task.isImportant)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.vertical, 5)
+        .swipeActions(allowsFullSwipe: false) {
+            Button {
+                store.send(.deleteTask(task: task))
+            } label: {
+                Image(systemName: "trash")
+            }
+            
+            Button {
+                store.send(.sendTaskInfo(task: task))
+                showRetitleView.toggle()
+            } label: {
+                Image(systemName: "pencil")
+            }
+            .tint(.cyan)
+        }
     }
 }
 
