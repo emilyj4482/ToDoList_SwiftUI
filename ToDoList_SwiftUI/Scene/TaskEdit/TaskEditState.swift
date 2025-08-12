@@ -10,6 +10,14 @@ import Foundation
 struct TaskEditState {
     var mode: TaskEditMode
     
+    var taskToEdit: Task? {
+        switch mode {
+        case .create:
+            return nil
+        case .retitle(let task):
+            return task
+        }
+    }
 }
 
 enum TaskEditMode {

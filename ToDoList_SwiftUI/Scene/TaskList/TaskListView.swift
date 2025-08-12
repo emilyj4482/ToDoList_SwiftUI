@@ -87,7 +87,7 @@ struct TaskListView: View {
         }
         .sheet(isPresented: $showEditView, content: {
             NavigationStack {
-                TaskEditView(repository: repository)
+                TaskEditView(repository: repository, mode: .create(categoryID: store.state.category.id))
             }
             .presentationDetents([.height(50)])
         })

@@ -113,10 +113,10 @@ final class TodoRepository {
 }
 
 extension TodoRepository {
-    func createTask(input: String, to category: Category) {
-        let task = Task(categoryID: category.id, title: input.trim)
+    func createTask(input: String, to categoryID: UUID) {
+        let task = Task(categoryID: categoryID, title: input.trim)
         
-        guard let index = categories.firstIndex(of: category) else { return }
+        guard let index = categories.firstIndex(where: { $0.id == categoryID }) else { return }
         
         categories[index].tasks.append(task)
         save()
