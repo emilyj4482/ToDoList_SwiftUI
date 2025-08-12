@@ -14,9 +14,15 @@ struct TaskListState {
         category.name == "Important"
     }
     
+    var taskToRetitle: Task?
+    
     var error: DataError?
     
     var hasError: Bool {
         error != nil
+    }
+    
+    mutating func setTask(_ task: Task) {
+        self.taskToRetitle = task
     }
 }

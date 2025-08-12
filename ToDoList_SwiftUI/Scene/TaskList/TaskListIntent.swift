@@ -11,4 +11,6 @@ enum TaskListIntent {
     case renameCategory(input: String)
     case toggleTaskDone(task: Task)
     case toggleTaskImportant(task: Task)
+    case deleteTask(task: Task)
+    case sendTaskInfo(task: Task)
 }

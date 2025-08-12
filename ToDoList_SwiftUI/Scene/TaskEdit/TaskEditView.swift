@@ -40,7 +40,7 @@ struct TaskEditView: View {
                     case .create(let categoryID):
                         store.send(.createTask(categoryID: categoryID, input: textFieldInput))
                     case .retitle(let task):
-                        print(task)
+                        store.send(.retitleTask(taskID: task.id, input: textFieldInput))
                     }
                     dismiss()
                 }
@@ -51,6 +51,7 @@ struct TaskEditView: View {
         .padding(.horizontal, 20)
         .frame(height: 50)
         .onAppear {
+            textFieldInput = store.state.taskToEdit?.title ?? ""
             focused = true
         }
     }

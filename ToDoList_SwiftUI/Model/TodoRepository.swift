@@ -154,5 +154,22 @@ extension TodoRepository {
         } else {
             categories[importantCategoryIndex].tasks.removeAll { $0.id == updatedTask.id }
         }
+        
+        save()
+    }
+    
+    func deleteTask(_ task: Task) {
+        guard let categoryIndex = categories.firstIndex(where: { $0.id == task.categoryID }),
+              let importantCategoryIndex = getImportantCategoryIndex()
+        else { return }
+        
+        categories[categoryIndex].tasks.removeAll { $0.id == task.id }
+        
+        // important category에서도 삭제
+        if task.isImportant {
+            categories[importantCategoryIndex].tasks.removeAll { $0.id == task.id }
+        }
+        
+        save()
     }
 }

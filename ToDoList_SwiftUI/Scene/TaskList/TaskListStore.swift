@@ -48,6 +48,10 @@ final class TaskListStore: ObservableObject {
             repository.toggleTaskDone(task: task)
         case .toggleTaskImportant(let task):
             repository.toggleTaskImportant(task: task)
+        case .deleteTask(task: let task):
+            repository.deleteTask(task)
+        case .sendTaskInfo(task: let task):
+            state.setTask(task)
         }
     }
 }

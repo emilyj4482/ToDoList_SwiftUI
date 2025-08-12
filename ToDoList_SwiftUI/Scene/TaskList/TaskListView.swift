@@ -20,7 +20,8 @@ struct TaskListView: View {
     @State private var showRenameAlert: Bool = false
     @State private var textFieldInput: String = ""
     
-    @State private var showEditView: Bool = false
+    @State private var showCreateView: Bool = false
+    @State private var showRetitleView: Bool = false
     
     var body: some View {
         VStack {
@@ -34,7 +35,7 @@ struct TaskListView: View {
                             TaskDoneToggleImage(isDone: task.isDone)
                         }
                         .buttonStyle(.plain)
-
+                        
                         Text(task.title)
                         
                         Spacer()
@@ -47,6 +48,21 @@ struct TaskListView: View {
                         .buttonStyle(.plain)
                     }
                     .padding(.vertical, 5)
+                    .swipeActions(allowsFullSwipe: false) {
+                        Button {
+                            store.send(.deleteTask(task: task))
+                        } label: {
+                            Image(systemName: "trash")
+                        }
+                        
+                        Button {
+                            store.send(.sendTaskInfo(task: task))
+                            showRetitleView.toggle()
+                        } label: {
+                            Image(systemName: "pencil")
+                        }
+                        .tint(.cyan)
+                    }
                 }
             }
             .listStyle(.plain)
@@ -54,7 +70,7 @@ struct TaskListView: View {
             // Add a Task Button
             if !store.state.isImportantCategory {
                 Button {
-                    showEditView.toggle()
+                    showCreateView.toggle()
                 } label: {
                     HStack {
                         Image(systemName: "plus")
@@ -86,9 +102,17 @@ struct TaskListView: View {
                 }
             }
         }
-        .sheet(isPresented: $showEditView, content: {
+        .sheet(isPresented: $showCreateView, content: {
             NavigationStack {
                 TaskEditView(repository: repository, mode: .create(categoryID: store.state.category.id))
+            }
+            .presentationDetents([.height(50)])
+        })
+        .sheet(isPresented: $showRetitleView, content: {
+            NavigationStack {
+                if let task = store.state.taskToRetitle {
+                    TaskEditView(repository: repository, mode: .retitle(task: task))
+                }
             }
             .presentationDetents([.height(50)])
         })
