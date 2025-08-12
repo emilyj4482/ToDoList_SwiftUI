@@ -40,7 +40,7 @@ struct TaskEditView: View {
                     case .create(let categoryID):
                         store.send(.createTask(categoryID: categoryID, input: textFieldInput))
                     case .retitle(let task):
-                        store.send(.retitleTask(taskID: task.id, input: textFieldInput))
+                        store.send(.retitleTask(task: task, input: textFieldInput))
                     }
                     dismiss()
                 }

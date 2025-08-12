@@ -25,8 +25,8 @@ final class TaskEditStore: ObservableObject {
         switch intent {
         case .createTask(let categoryID, let input):
             repository.createTask(input: input, to: categoryID)
-        case .retitleTask(let taskID, let input):
-            print(input)
+        case .retitleTask(let task, let input):
+            repository.retitleTask(task: task, input: input)
         }
     }
 }

@@ -9,5 +9,5 @@ import Foundation
 
 enum TaskEditIntent {
     case createTask(categoryID: UUID, input: String)
-    case retitleTask(taskID: UUID, input: String)
+    case retitleTask(task: Task, input: String)
 }

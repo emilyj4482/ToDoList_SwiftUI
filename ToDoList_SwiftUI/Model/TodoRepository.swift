@@ -172,4 +172,20 @@ extension TodoRepository {
         
         save()
     }
+    
+    func retitleTask(task: Task, input: String) {
+        guard let categoryIndex = categories.firstIndex(where: { $0.id == task.categoryID }),
+              let taskIndex = categories[categoryIndex].tasks.firstIndex(of: task),
+              let importantCategoryIndex = getImportantCategoryIndex()
+        else { return }
+        
+        categories[categoryIndex].tasks[taskIndex].retitle(to: input.trim)
+        
+        // important category에서도 수정
+        if task.isImportant, let index = categories[importantCategoryIndex].tasks.firstIndex(of: task) {
+            categories[importantCategoryIndex].tasks[index].retitle(to: input.trim)
+        }
+        
+        save()
+    }
 }
