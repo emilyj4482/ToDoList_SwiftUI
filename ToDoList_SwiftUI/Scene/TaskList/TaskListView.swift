@@ -33,6 +33,7 @@ struct TaskListView: View {
                         } label: {
                             TaskDoneToggleImage(isDone: task.isDone)
                         }
+                        .buttonStyle(.plain)
 
                         Text(task.title)
                         
@@ -43,7 +44,7 @@ struct TaskListView: View {
                         } label: {
                             TaskImportantToggleImage(isImportant: task.isImportant)
                         }
-
+                        .buttonStyle(.plain)
                     }
                     .padding(.vertical, 5)
                 }
