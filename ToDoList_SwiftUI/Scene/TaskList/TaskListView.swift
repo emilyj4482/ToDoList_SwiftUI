@@ -78,6 +78,15 @@ struct TaskListView: View {
                 }
             }
         }
+        .alert("Error", isPresented: .constant(store.state.hasError), actions: {
+            Button("OK") {
+                if let error = store.state.error {
+                    print(error.errorDescription)
+                }
+            }
+        }, message: {
+            Text("Data could not be loaded. Please try again later.")
+        })
         .sheet(isPresented: $showCreateView, content: {
             NavigationStack {
                 TaskEditView(repository: repository, mode: .create(categoryID: store.state.category.id))
