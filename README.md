@@ -1,7 +1,7 @@
 # ToDoList
 > `SwiftUI`를 독학한 뒤 처음으로 만든 앱입니다. `UIKit`으로 구현했던 할 일 관리 앱을 다시 구현한 프로젝트입니다.
 ## 목차
-- [주요 구현사항](#-주요-구현사항)
+- [주요 구현사항](#주요-구현사항)
 - [트러블슈팅](#트러블슈팅)
 ## 기술 스택
 - `SwiftUI`
@@ -43,6 +43,21 @@
 │   │   └─ TaskEditStore.swift
 ```
 ## 주요 구현사항
+### 📌 예약어 고려한 Model 네이밍
+`UIKit`에서는 할 일 model인 `Task`의 그룹을 `List`로 관리했지만 `SwiftUI`에는 `List`, `Group`이 UI 컴포넌트로 존재하여 겹치지 않는 이름인 `Category`로 지었습니다.
+```swift
+struct Category: Identifiable, Codable, Hashable {
+    var id: UUID = UUID()
+    var name: String
+    var tasks: [Task]
+    
+    mutating func rename(to name: String) {
+        self.name = name
+    }
+    
+    static let defaultImportantCategory: Category = Category(name: "Important", tasks: [])
+}
+```
 ### 📌 의존성 주입 패턴
 - `TodoRepository`는 `Todo` 데이터 CRUD를 담당하는 객체로, 모든 화면에서 필요합니다. 데이터 일관성 보장을 위해 앱 main에서 최초 생성된 객체를 화면 이동 시 주입합니다.
 - 각 `View`에서는 외부에서 주입 받은 `repository`를 `Store`에 전달하기 위해 `init`에서 `wrappedValue`로 `StateObject`를 생성하였습니다.
@@ -246,3 +261,85 @@ final class MainStore: ObservableObject {
 ```
 ## 트러블슈팅
 ### ⚠️ 제스쳐 충돌 문제
+#### ☹️ 문제
+<img src="https://github.com/user-attachments/assets/65b8c29b-aad5-4e04-97e4-98a182a29aeb" width=400>
+
+`swipeActions`에 추가한 `Button`을 탭해도 액션이 실행되지 않는 현상
+#### 🧐 원인
+`TextField`의 focus를 해제하기 위해 뷰에 `onTapGesture` 추가 - 탭 제스쳐가 스와이프 제스쳐와 충돌
+> 탭 제스쳐가 스와이프 액션보다 먼저 인식되어 버튼 탭 동작이 전달되지 않음
+#### 😇 해결
+`onTapGesture`를 제거하고, `TextField`를 포함한 뷰를 분리하여 `sheet`로 present
+> `sheet`는 시스템이 키보드 및 화면 dismiss 동작을 기본 제공하므로, 외부 영역을 탭할 때 자동으로 키보드와 뷰가 함께 닫히게 됨
+#### 😎 성과
+- 제스쳐 충돌이 사라져 `swipeAction`이 정상적으로 작동
+- `sheet`는 외부 화면을 탭하면 자연스럽게 dismiss 되므로 UX 개선
+- 탭 제스쳐와 스와이프 제스쳐가 우선순위에 따라 충돌할 수 있음을 학습
+- 단순히 "탭 제스쳐 제거"에서 그치지 않고 view 구조 변경이라는 의외의 접근을 통해 문제를 해결하는 능력 향상
+### ⚠️ confirmationDialog를 거친 데이터 삭제 문제
+#### ☹️ 문제
+<img src="https://github.com/user-attachments/assets/3f4459c4-29d6-4b15-88c6-9ce222c4eaa0" width=400>
+
+- 스와이프 액션으로 `Category` 삭제 버튼을 탭하면 사용자에게 재확인 메시지를 띄우는 `confirmationDialog` 구현
+- dialog 내 `Delete` 버튼을 눌렀을 때 swipe 한 아이템이 아닌 엉뚱한 아이템이 삭제되고, `confirmationDialog`가 짧게 다시 나타났다가 사라지는 현상
+#### 🧐 원인
+```swift
+@State private var showActionSheet: Bool = false
+
+// Categories List
+List {
+    ForEach(store.state.categories) { category in
+        NavigationLink(value: category) {
+            HStack {
+                // ... //
+            }
+            .swipeActions(allowsFullSwipe: false) {
+                Button {
+                    showActionSheet.toggle()
+                } label: {
+                    Image(systemName: "trash")
+                }
+            }
+            .confirmationDialog("Are you sure you want to delete this category?", isPresented: $showActionSheet) {
+                Button("Delete", role: .destructive) {
+                    store.send(.deleteCategory(id: category.id))
+                }
+                // ... //
+            }
+        }
+    }
+}
+
+```
+- Category List를 `ForEach`문으로 구현 - `swipeAction`, `confirmationDialog`가 반복문 내에 존재
+- `ForEach`로 인해 `confirmationDialog`가 여러번 호출되며 삭제 category 값에 대한 추적이 꼬임
+#### 😇 해결
+```swift
+@State private var showActionSheet: Bool = false
+@State private var categoryIDToDelete: UUID?
+
+List {
+    // ... //
+    .swipeActions(allowsFullSwipe: false) {
+        Button {
+            categoryIDToDelete = category.id
+            showActionSheet.toggle()
+        } label: {
+            Image(systemName: "trash")
+        }
+    }
+}
+.confirmationDialog("Are you sure you want to delete this category?", isPresented: $showActionSheet) {
+    Button("Delete", role: .destructive) {
+        if let categoryID = categoryIDToDelete {
+            store.send(.deleteCategory(id: categoryID))
+        }
+        categoryIDToDelete = nil
+    }
+    // ... //
+}
+```
+`confirmationDialog`를 반복문 밖으로 빼고, 삭제할 `Category` 정보를 `@State` 변수에 저장하도록 구현
+#### 😎 성과
+- `confirmationDialog`를 `ForEach` 내부에 구현하면 안된다는 것 학습
+- 쉽고 편한 해결을 위해 `confirmationDialog` 자체를 삭제할까도 고민했지만, 좋은 `UX` 유지를 위해 포기하지 않고 타개법을 찾아냄
